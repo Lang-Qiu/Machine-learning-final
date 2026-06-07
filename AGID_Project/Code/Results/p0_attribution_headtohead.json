@@ -1,0 +1,55 @@
+{
+  "concepts": {
+    "bitplane_lsb": {
+      "probe_r2": 0.8062408111008805,
+      "cos_v_w": -0.00924255458474769,
+      "delta_acc_pp": 0.0,
+      "acc_after": 100.0
+    },
+    "freq_radial": {
+      "probe_r2": 0.6117912553040715,
+      "cos_v_w": -0.0202637006068176,
+      "delta_acc_pp": 0.0,
+      "acc_after": 100.0
+    },
+    "color_manifold": {
+      "probe_r2": 1.0,
+      "cos_v_w": 0.0,
+      "delta_acc_pp": 0.0,
+      "acc_after": 100.0
+    },
+    "hf_noise": {
+      "probe_r2": 0.758886514752914,
+      "cos_v_w": 0.019419744300375838,
+      "delta_acc_pp": 0.0,
+      "acc_after": 100.0
+    },
+    "jpeg_quant": {
+      "probe_r2": 0.8782469934224004,
+      "cos_v_w": 0.0033965319130120535,
+      "delta_acc_pp": 0.0,
+      "acc_after": 100.0
+    },
+    "texture_geometry": {
+      "probe_r2": 0.3462781028650814,
+      "cos_v_w": -0.0026908923936225827,
+      "delta_acc_pp": 0.0,
+      "acc_after": 100.0
+    }
+  },
+  "random_control_delta_acc_pp": {
+    "mean": 0.0,
+    "std": 0.0,
+    "min": 0.0,
+    "max": 0.0
+  },
+  "meta": {
+    "n_images": 1680,
+    "n_test": 504,
+    "baseline_acc_overall": 99.88095238095238,
+    "baseline_acc_test": 100.0,
+    "alpha": 100.0,
+    "bottleneck_jpeg_quant_zeroout_pp": -49.54,
+    "ckpt": "../Logs/cbnet_baseline_nobottleneck_s42/ckpt_epoch20.pth"
+  }
+}

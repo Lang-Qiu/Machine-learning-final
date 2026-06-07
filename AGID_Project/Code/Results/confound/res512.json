@@ -1,0 +1,122 @@
+{
+  "variant": "res512",
+  "ckpt": "E:\\LQiu\\lab_folder\\Machine_learning\\AGID_Project\\Logs\\cbnet_multigen_main_25k_s42\\ckpt_epoch20.pth",
+  "n_per_class": 1000,
+  "seed": 0,
+  "results": {
+    "Stable_Diffusion_v1.4": {
+      "name": "Stable_Diffusion_v1.4",
+      "n": 2000,
+      "acc": 0.9975,
+      "auc": 0.999991,
+      "real_acc": 0.995,
+      "fake_acc": 1.0,
+      "concept_means": {
+        "bitplane_lsb": 0.2081337571144104,
+        "freq_radial": 0.4294843375682831,
+        "color_manifold": 0.33710500597953796,
+        "hf_noise": 0.31622248888015747,
+        "jpeg_quant": 0.5100582242012024,
+        "texture_geometry": 0.4110572338104248
+      }
+    },
+    "BigGAN": {
+      "name": "BigGAN",
+      "n": 2000,
+      "acc": 0.991,
+      "auc": 0.999271,
+      "real_acc": 0.992,
+      "fake_acc": 0.99,
+      "concept_means": {
+        "bitplane_lsb": 0.2163149118423462,
+        "freq_radial": 0.5087003111839294,
+        "color_manifold": 0.3410908877849579,
+        "hf_noise": 0.2053738534450531,
+        "jpeg_quant": 0.4570275843143463,
+        "texture_geometry": 0.32931891083717346
+      }
+    },
+    "ADM": {
+      "name": "ADM",
+      "n": 2000,
+      "acc": 0.8705,
+      "auc": 0.953508,
+      "real_acc": 0.994,
+      "fake_acc": 0.747,
+      "concept_means": {
+        "bitplane_lsb": 0.21893231570720673,
+        "freq_radial": 0.4285892844200134,
+        "color_manifold": 0.32225245237350464,
+        "hf_noise": 0.20873363316059113,
+        "jpeg_quant": 0.5201486349105835,
+        "texture_geometry": 0.3401851952075958
+      }
+    },
+    "Midjourney": {
+      "name": "Midjourney",
+      "n": 2000,
+      "acc": 0.9945,
+      "auc": 0.999395,
+      "real_acc": 0.991,
+      "fake_acc": 0.998,
+      "concept_means": {
+        "bitplane_lsb": 0.27884596586227417,
+        "freq_radial": 0.4386959373950958,
+        "color_manifold": 0.34295105934143066,
+        "hf_noise": 0.23182596266269684,
+        "jpeg_quant": 0.4653870165348053,
+        "texture_geometry": 0.3544434607028961
+      }
+    },
+    "GLIDE": {
+      "name": "GLIDE",
+      "n": 2000,
+      "acc": 0.992,
+      "auc": 0.998906,
+      "real_acc": 0.993,
+      "fake_acc": 0.991,
+      "concept_means": {
+        "bitplane_lsb": 0.3872680068016052,
+        "freq_radial": 0.44133540987968445,
+        "color_manifold": 0.4961560070514679,
+        "hf_noise": 0.2064649909734726,
+        "jpeg_quant": 0.4347586929798126,
+        "texture_geometry": 0.288263201713562
+      }
+    },
+    "Wukong": {
+      "name": "Wukong",
+      "n": 2000,
+      "acc": 0.993,
+      "auc": 0.999689,
+      "real_acc": 0.993,
+      "fake_acc": 0.993,
+      "concept_means": {
+        "bitplane_lsb": 0.2102474421262741,
+        "freq_radial": 0.40818333625793457,
+        "color_manifold": 0.3250906467437744,
+        "hf_noise": 0.32403138279914856,
+        "jpeg_quant": 0.5079745054244995,
+        "texture_geometry": 0.4221610128879547
+      }
+    },
+    "VQDM": {
+      "name": "VQDM",
+      "n": 2000,
+      "acc": 0.772,
+      "auc": 0.939013,
+      "real_acc": 0.993,
+      "fake_acc": 0.551,
+      "concept_means": {
+        "bitplane_lsb": 0.18705116212368011,
+        "freq_radial": 0.3512187600135803,
+        "color_manifold": 0.4088189899921417,
+        "hf_noise": 0.19555634260177612,
+        "jpeg_quant": 0.5334771275520325,
+        "texture_geometry": 0.28811749815940857
+      }
+    }
+  },
+  "mean_acc": 0.9443571428571429,
+  "mean_auc": 0.9842532857142857
+}

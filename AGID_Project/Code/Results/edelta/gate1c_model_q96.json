@@ -1,0 +1,86 @@
+{
+  "q": 96,
+  "n_per_class": 500,
+  "results": {
+    "Stable_Diffusion_v1.4": {
+      "acc": 0.949,
+      "auc": 0.9881580000000001,
+      "real_acc": 0.998,
+      "fake_acc": 0.9,
+      "n": 1000,
+      "jpeg_quant_mean_real": 0.7151555418968201,
+      "jpeg_quant_mean_fake": 0.3745211064815521
+    },
+    "BigGAN": {
+      "acc": 0.83,
+      "auc": 0.990184,
+      "real_acc": 0.996,
+      "fake_acc": 0.664,
+      "n": 1000,
+      "jpeg_quant_mean_real": 0.707392692565918,
+      "jpeg_quant_mean_fake": 0.3816351890563965
+    },
+    "ADM": {
+      "acc": 0.888,
+      "auc": 0.989824,
+      "real_acc": 0.992,
+      "fake_acc": 0.784,
+      "n": 1000,
+      "jpeg_quant_mean_real": 0.7241307497024536,
+      "jpeg_quant_mean_fake": 0.3602748513221741
+    },
+    "Midjourney": {
+      "acc": 0.947,
+      "auc": 0.9933399999999999,
+      "real_acc": 0.994,
+      "fake_acc": 0.9,
+      "n": 1000,
+      "jpeg_quant_mean_real": 0.7093581557273865,
+      "jpeg_quant_mean_fake": 0.30630993843078613
+    }
+  },
+  "cohens_d": {
+    "Stable_Diffusion_v1.4": {
+      "bitplane_lsb": 1.4469638891227605,
+      "freq_radial": 2.712168737918502,
+      "color_manifold": 1.1333876389881983,
+      "hf_noise": 0.3802941305211198,
+      "jpeg_quant": -2.755633939586721,
+      "texture_geometry": 1.184483150957702
+    },
+    "BigGAN": {
+      "bitplane_lsb": 0.77616472684919,
+      "freq_radial": 2.4259970905055805,
+      "color_manifold": 0.7344951705053511,
+      "hf_noise": -0.9118276614293941,
+      "jpeg_quant": -2.4406017012187844,
+      "texture_geometry": -0.05333516622807342
+    },
+    "ADM": {
+      "bitplane_lsb": 1.2661936449569153,
+      "freq_radial": 2.3071028889302694,
+      "color_manifold": 0.7754935134725035,
+      "hf_noise": -0.60329537006106,
+      "jpeg_quant": -2.8089150786702777,
+      "texture_geometry": 0.5255229063349104
+    },
+    "Midjourney": {
+      "bitplane_lsb": 1.4952142939062911,
+      "freq_radial": 2.5967333684853817,
+      "color_manifold": 1.0876932953142786,
+      "hf_noise": -0.1042485461623101,
+      "jpeg_quant": -3.2941612913742087,
+      "texture_geometry": 0.7327142486247885
+    }
+  },
+  "mean_acc": 0.9035,
+  "gate1c": {
+    "jpeg_quant_raw_pergen_mean_abs_d": 3.8347333666462395,
+    "jpeg_quant_q96_pergen_mean_abs_d": 2.824828002712498,
+    "jpeg_quant_d_drop_pct": 26.3,
+    "suppression": "PARTIAL \u2014 |d| dropped but model still detects residual Q96 signal",
+    "floor_match": true,
+    "pass": true,
+    "conclusion": "GATE 1c PASS \u2014 partial suppression of jpeg_quant concept at inference, floor match confirms confound-controlled acc ~90%. Smoke hypothesis supported: retrain on Q96 data expected to force concept reliance migration."
+  }
+}

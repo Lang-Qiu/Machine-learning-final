@@ -1,0 +1,29 @@
+{
+  "classifier_weight": {
+    "bitplane_lsb": 6.44739294052124,
+    "freq_radial": 9.83751392364502,
+    "color_manifold": 6.210283279418945,
+    "hf_noise": 3.7333004474639893,
+    "jpeg_quant": -13.52640151977539,
+    "texture_geometry": 7.346343040466309
+  },
+  "classifier_bias": -5.061417102813721,
+  "model_jpeg_quant_d_by_gen": {
+    "ADM": -3.9014046361866628,
+    "BigGAN": -4.375149243540037,
+    "GLIDE": -5.049534634562974,
+    "Midjourney": -3.8989914413688997,
+    "Stable_Diffusion_v1.4": -3.1633881454893595,
+    "VQDM": -4.019523901326742,
+    "Wukong": -3.2160984725561224
+  },
+  "model_jpeg_quant_d_pooled": -3.741252120347651,
+  "model_all_concept_d_pooled": {
+    "bitplane_lsb": 1.3333698660865088,
+    "freq_radial": 3.844608935235632,
+    "color_manifold": 1.551714844476098,
+    "hf_noise": -0.1664238596225713,
+    "jpeg_quant": -3.741252120347651,
+    "texture_geometry": 0.7292946978043168
+  }
+}

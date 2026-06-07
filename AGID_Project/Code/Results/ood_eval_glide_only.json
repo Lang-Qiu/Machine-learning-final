@@ -1,0 +1,19 @@
+{
+  "ckpt": "E:/LQiu/lab_folder/Machine_learning/AGID_Project/Logs/cbnet_multigen_main_25k_s42/ckpt_epoch20.pth",
+  "n_per_class": 1000,
+  "generators": [
+    "GLIDE"
+  ],
+  "results": {
+    "GLIDE": {
+      "name": "GLIDE",
+      "n": 2000,
+      "acc": 0.998,
+      "auc": 1.0,
+      "real_acc": 0.996,
+      "fake_acc": 1.0
+    }
+  },
+  "mean_acc": 0.998,
+  "mean_auc": 1.0
+}

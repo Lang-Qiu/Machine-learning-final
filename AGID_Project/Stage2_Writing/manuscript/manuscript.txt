@@ -1,0 +1,843 @@
+      What Is the Accuracy Made Of? Auditing a
+                          Competitive
+
+     AI-Generated Image Detector with a Concept
+                           Bottleneck
+
+                                                   [Your Name]
+                                         Shanghai Jiao Tong University
+
+                                          [email@example.com]
+
+                                            Abstract
+
+          AI-generated image detection has advanced to the point where, on the standard
+          GenImage benchmark, recent detectors report near-saturated cross-generator ac-
+          curacy; our own deliberately conventional, single-GPU detector reaches 99.67%
+          mean accuracy on held-out GenImage generators. A saturated benchmark, however,
+          leaves open what such numbers are made of: a high score can reflect either the
+          detection of generative traces or the exploitation of incidental dataset artifacts. We
+          study this question from inside the model. Our detector--a dual-stream backbone
+          with a six-channel concept bottleneck and a linear head--has one essential prop-
+          erty: the prediction passes through six separately-testable evidence channels and
+          nothing else. We use this bottleneck not as an interpretability device but as an
+          audit instrument, measuring each channel's contribution causally, by ablation and
+          counterfactual, rather than reading it from weights or post-hoc narration. The audit
+          shows that the detector's decision turns on a single frequency/compression cue--
+          localized by intervention, which weight inspection would have mis-attributed--and
+          that this reliance persists even after Grommelt-style JPEG debiasing neutralizes the
+          obvious container cue, so the channel is not reducible to image format. The headline
+          accuracy is thus partly confound-inflated: it drops substantially on a container-
+          mismatched benchmark, though multi-generator training still buys genuine partial
+          cross-architecture generalization. We extend prior dataset-level analyses of GenIm-
+          age confounds to a model-internal account--where the reliance lives, how large
+          it is, and whether it survives debiasing--and argue that a concept bottleneck's
+          value lies in being a testability surface. We report competitive, not state-of-the-art,
+          detection.
+
+1 Introduction
+
+Generative image models have advanced to the point where their outputs are, for many categories
+of content, perceptually indistinguishable from real photographs. Generative adversarial networks
+[Brock et al., 2019] established high-fidelity synthesis, and latent-diffusion and text-to-image systems
+[Rombach et al., 2022, Dhariwal and Nichol, 2021, Nichol et al., 2022] have since made photorealistic
+generation cheap, controllable, and ubiquitous. The resulting flood of synthetic imagery poses
+concrete risks for misinformation, fraud, and the integrity of visual evidence, and has made AI-
+generated image detection (AGID) a central problem in media forensics. On the field's dominant
+benchmark, GenImage [Zhu et al., 2023], detection accuracy has effectively saturated: methods
+spanning spatial-domain classifiers [Wang et al., 2020], neighborhood-pixel-relationship residuals
+[Tan et al., 2024a], bit-plane representations [Wang et al., 2025], and multimodal large-language-
+model reasoning [Zhou et al., 2025] now routinely report cross-generator accuracies above 98%. By
+the usual reading, AGID is close to solved.
+
+A saturated benchmark, however, raises a question the accuracy figure alone cannot settle. A detector
+earns a high number whenever its inputs contain any feature that separates the real and AI partitions
+of the dataset--whether that feature is a generative trace intrinsic to the synthesis process, or an
+incidental artifact of how the dataset was assembled. The two are indistinguishable from the loss
+curve, yet only the former is what we intend to measure. The pressing question behind the leaderboard
+is therefore not how accurate is the detector? but what is the accuracy made of?
+
+Two obstacles stand between the field and an answer. The first is that interpretability in AGID is
+generally asserted rather than causally tested. Concept-bottleneck models [Koh et al., 2020] and,
+more recently, MLLM-based detectors such as AIGI-Holmes [Zhou et al., 2025] attach human-legible
+explanations to their predictions--named concepts, or natural-language rationales describing anatom-
+ical errors and physical-law violations. But an explanation produced alongside a decision is not
+necessarily the cause of that decision; the concept-bottleneck literature has itself repeatedly docu-
+mented that learned concepts can be unfaithful, leaky, or unused [Margeloiu et al., 2021, Mahinpei
+et al., 2021, Havasi et al., 2022]. In AIGI-Holmes the rationale is generated by a separate language
+module whose fidelity to the visual detector's actual computation is never verified. Interpretation, in
+short, is offered but not intervened upon.
+
+The second obstacle is that the measurement validity of the benchmark is under-examined at the level
+of the model. Grommelt et al. [2024] recently established that GenImage and comparable datasets
+carry systematic biases--most notably a JPEG-compression confound (real images are stored as
+JPEG, many synthetic images as lossless PNG) and an image-size confound--and that black-box
+detectors learn to exploit them: re-encoding every image to a uniform JPEG quality materially
+changes cross-generator performance. This is a crucial dataset-level diagnosis. But because it is
+obtained with black-box classifiers, it establishes only that a confound exists and that detectors are
+sensitive to it; it does not reveal how an individual model distributes its decision across such cues,
+how much of a given detector's competence rests on the confound rather than on generative traces, or
+whether that competence would survive removal of the confound. These are model-internal questions,
+and answering them requires a model-internal instrument.
+
+The field thus presents a dilemma: strong but opaque detectors on one side, and interpretable-by-
+assertion detectors whose explanations are seldom tested on the other. What is missing--and what
+this paper supplies--is an architecture-level audit mechanism that can intervene on separately-testable
+evidence channels inside a competitive detector: a model whose prediction provably routes through a
+small set of named cues, each of which can be individually ablated, swapped, and re-measured.
+
+We present CBNet-AGID, a deliberately conventional, single-GPU detector assembled from standard
+components--an ImageNet-pretrained ResNet-50 stream, a neighborhood-pixel-relationship residual
+stream [Tan et al., 2024a], a six-channel concept-bottleneck layer, and a linear classifier with no
+skip connection from features to output. We are explicit about what we do and do not claim for
+this architecture. We do not claim its six channels are intrinsically interpretable or individually
+faithful: their semantic identities are induced by weak heuristic supervision, not enforced by the
+architecture--and one of our central findings is precisely that these identities cannot be taken at face
+value. What the architecture does guarantee is narrower and, for our purpose, more valuable: that the
+prediction is a linear function of the six channel activations alone, with no bypass path. This turns
+the bottleneck into an audit instrument--a surface on which each evidence channel's contribution
+to the decision can be measured causally, by zeroing or counterfactually swapping it, rather than
+inferred from correlations or from the model's own narration. We deliberately keep the detector
+conventional so that what the audit finds reflects the behaviour of standard strong detectors rather
+than an idiosyncratic architecture.
+
+Applying this instrument to a detector trained jointly on four GenImage generators yields a sharp
+picture. A single channel--supervised by a JPEG-quantization-trace heuristic--dominates the
+decision: ablating it alone collapses balanced accuracy to near chance on every generator, and a
+causal counterfactual confirms it is the channel the decision actually turns on, while the bottleneck's
+remaining channels carry little independent signal. The linear-head weights do not reveal this--
+their magnitudes are far more evenly distributed--so only intervention exposes the dependency,
+underscoring that weight inspection is an unreliable proxy for functional reliance and that causal
+ablation is the appropriate test. Crucially, this reliance is not merely the obvious container cue. When
+
+                                                           2
+we retrain the identical architecture on a Grommelt-style debiased corpus--every image re-encoded to
+a uniform JPEG quality of 96, neutralizing the PNG-versus-JPEG container gap at the data level--the
+model still routes roughly 48 points of accuracy through the same channel. The channel is therefore
+not reducible to the trivial container label; whether it captures genuine generative-pipeline traces or
+residual compression-history statistics that survive uniform re-encoding is a question our experiments
+cannot fully resolve, and we are careful not to overstate it.
+
+Finally, the audit lets us read the headline number honestly. On held-out GenImage generators
+the detector reaches 99.67% mean accuracy--competitive with the strongest reported single-GPU
+methods. But that figure is partly a property of the benchmark rather than of the detector: evaluated
+on ForenSynths [Wang et al., 2020], a cross-architecture benchmark drawn from different real
+and synthetic sources that do not share GenImage's container statistics, the same model attains
+73.65%. The 26-point drop indicates that a substantial share of the GenImage number does not
+transfer; yet 73.65% is also well above an otherwise-identical single-generator model, which is
+barely above chance--indicating that multi-generator training buys genuine partial cross-architecture
+generalization. The honest summary is neither "the detector merely exploits a confound" nor "the
+detector robustly generalizes," but both at once--partial confound inflation alongside genuine partial
+generalization--and we attribute neither all nor none of the cross-benchmark gap to the confound,
+since it is entangled with a real GAN-versus-diffusion distribution shift.
+
+These observations organize the paper around two research questions:
+
+        · RQ1 (Detection). Can a deliberately standard, single-GPU concept-bottleneck detector
+           attain competitive cross-generator accuracy on GenImage?
+
+        · RQ2 (Audit). What does that accuracy rest on--which separately-testable evidence channels
+           does the detector rely upon, how much does each contribute under causal intervention, does
+           that reliance survive dataset-level debiasing, and how much of the headline GenImage
+           number is artifact-inflated versus genuinely generalizing?
+
+Our contributions are as follows. (1) We repurpose a concept bottleneck as an architecture-level audit
+instrument for AGID--separately-testable evidence channels with a no-bypass guarantee that makes
+per-channel faithfulness causally testable rather than assumed. (2) Using it, we give a model-internal
+localization of the GenImage confound, showing that a competitive detector's decision turns causally
+on a single JPEG-quantization channel--ablating it collapses accuracy to chance. (3) We quantify this
+reliance by causal intervention--single-channel ablation and counterfactual swaps--and show that
+the linear weights would have mis-attributed it. (4) We show the reliance persists under Grommelt-
+style debiasing (a persistence result we label Outcome C), extending Grommelt et al. [2024]'s
+dataset-level diagnosis to a model-internal one, and we bound how much of the benchmark number is
+confound-inflated through a cross-architecture (ForenSynths) comparison. The competitive detector
+itself is not our headline claim; it is the subject of the audit. Throughout, we are explicit about scope:
+we report competitive, not state-of-the-art, detection--our joint multi-generator training protocol
+differs from the single-generator protocols of the methods we tabulate, as detailed in §4.1--and we
+frame our generalization findings as partial in both directions.
+
+2 Related Work
+
+Generalizable AGID detectors. The modern AGID literature is organized around one goal: a
+detector trained on one or a few generators that generalizes to unseen ones. Early work showed that
+a plain CNN trained on ProGAN images transfers surprisingly well across GAN families [Wang
+et al., 2020], and subsequent methods improved cross-generator transfer through frequency-domain
+cues [Frank et al., 2020, Durall et al., 2020, Tan et al., 2024c], neighborhood-pixel-relationship
+residuals [Tan et al., 2024a], bit-plane decompositions [Wang et al., 2025], reconstruction error from
+diffusion inversion [Wang et al., 2023], and features from frozen vision­language backbones [Ojha
+et al., 2023]. On GenImage [Zhu et al., 2023], the de-facto standard benchmark, the strongest of
+these report cross-generator accuracies in the high-90s, and the field increasingly treats GenImage
+performance as near-saturated. These detectors are, however, black boxes: each exposes a single
+decision score with no internal, separately-testable account of which evidence a prediction rests
+on. And as a matter of measurement, these near-saturated GenImage numbers may reflect not only
+generative-trace detection but also dataset shortcuts--a concern raised by Grommelt et al. [2024] and
+
+                                                           3
+one we test model-internally in our experiments. The accuracy is established; what the accuracy rests
+on is not.
+
+Interpretable detection and concept bottlenecks. A parallel line of work seeks detectors that
+explain their decisions. Concept-bottleneck models route prediction through a layer of human-named
+concepts [Koh et al., 2020], and explainable AGID has lately been pursued most visibly through
+multimodal LLMs: AIGI-Holmes [Zhou et al., 2025], for instance, pairs a visual detector with a
+tuned language model that narrates anatomical, physical, and common-sense anomalies, while related
+systems generate chain-of-thought or grounded rationales [Huang et al., 2025, Tan et al., 2025, Ji
+et al., 2025]. The difficulty is that such explanations are validated, if at all, by their plausibility to
+a human reader rather than by their causal role in the decision. This is not a hypothetical worry:
+the concept-bottleneck literature has documented that learned concepts may fail to mean what their
+labels say--they can be unfaithful to the underlying computation [Margeloiu et al., 2021], leak
+information through their soft activations [Havasi et al., 2022], or simply go unused as intended
+[Mahinpei et al., 2021]. For MLLM rationales the problem is sharper still, because the narration is
+produced by a module structurally distinct from the detector and is, by construction, un-intervenable:
+one cannot ablate a sentence and re-measure the decision. AIGI-Holmes is thus the natural foil for
+our work--interpretability at its most expressive and least falsifiable. We take the opposite stance.
+We do not claim our concepts are interpretable by construction; we claim only that the bottleneck
+makes per-channel reliance causally testable, and we carry out that test--single-channel ablation and
+concept-sensitivity probes in the spirit of Kim et al. [2018] and insertion/deletion analysis [Petsiuk
+et al., 2018]--rather than assert its outcome.
+
+Dataset confounds in AGID benchmarks. Closest to our diagnostic aim is recent work on benchmark
+biases. Grommelt et al. [2024] show that GenImage and similar corpora conflate "generated-ness"
+with incidental acquisition artifacts--chiefly a JPEG-compression gap (real images stored as JPEG,
+many synthetic images as lossless PNG) and an image-size gap--and that conventional black-box
+detectors learn these shortcuts, so that debiasing the data by uniform re-encoding shifts cross-generator
+performance. We build directly on this finding and credit it as the origin of the confound diagnosis:
+we do not claim to discover that GenImage is confounded. Our contribution is complementary and
+orthogonal in vantage point. Grommelt's analysis is conducted from the outside, with black-box
+classifiers, and establishes the confound at the level of the dataset. We provide the corresponding
+account at the level of the model: using the bottleneck as an instrument, we localize the confound to
+a specific evidence channel, quantify by causal intervention how much of a competitive detector's
+accuracy flows through it, and ask--by retraining on Grommelt-style debiased data--whether that
+reliance is removed or merely relocated.
+
+The gap. Taken together, the field offers strong but opaque detectors, interpretable-by-assertion
+detectors whose explanations are not causally tested, and a dataset-level diagnosis of confounding
+obtained without looking inside any model. What no prior work provides is an architecture-level
+audit mechanism that can intervene on separately-testable evidence channels within a competitive
+detector--turning the question "what is the accuracy made of?" from a matter of inference into one
+of measurement. That mechanism, and the model-internal account of GenImage's confound it yields,
+is the subject of this paper.
+
+3 Method
+
+3.1 Overview
+
+We treat AI-generated image detection as binary classification: given an RGB image I, predict
+y  {0, 1} (0 = real, 1 = AI-generated). Our detector, CBNet-AGID, is a three-stage pipeline--a
+dual-stream backbone f, a concept-bottleneck layer C of K=6 channels, and a linear classifier
+w--arranged so that every prediction is, by construction, a linear function of six separately-testable
+evidence channels and nothing else. The design is deliberately conventional: each component
+is a standard, off-the-shelf building block, and we make no claim of architectural novelty. Its
+purpose is not raw performance but auditability--the no-skip bottleneck of §3.3 is what licenses the
+causal intervention analysis (§3.7) that constitutes this paper's contribution. The model has 38M
+parameters and trains and runs on a single 8GB consumer GPU.
+
+                                                           4
+3.2 Dual-stream backbone
+
+The backbone fuses two parallel streams operating on the same input. The pixel stream is a standard
+ImageNet-pretrained ResNet-50 [He et al., 2016], producing a 2048 × 8 × 8 feature map for a
+256 × 256 input. The signal stream operates on the neighborhood-pixel-relationship residual of Tan
+et al. [2024a], r(I) = I - U(D(I)), where D, U are nearest-neighbor down- and up-sampling by a
+factor of two; a lightweight five-layer strided CNN (3M parameters) maps r(I) to a 512 × 8 × 8
+map. The two are concatenated channel-wise into f(I)  R2560×8×8. Both streams are off-the-shelf;
+their pairing is an engineering convenience for capturing low- and high-level cues, not a contribution.
+
+3.3 Concept-bottleneck layer: the audit surface
+
+The bottleneck C comprises K=6 architecturally identical heads. Each head hk applies a 1 × 1
+convolution (2560  640), batch-norm, ReLU, and a second 1 × 1 convolution to a single spatial
+map; the scalar channel activation is ck(I) =  GAP(hk (f(I)))  [0, 1], with the pre-pooling
+map retained as a heatmap for localization. The channel vector c(I) = [c1, . . . , c6] feeds a linear
+classifier:
+
+                                             y^(I) =  wc(I) + b .
+
+Two properties are essential. (i) No skip connection: the classifier sees only c(I)--never f(I)--so
+the six scalars are the sole information path from image to decision. This is the load-bearing property
+of the architecture: it is what makes a channel's functional role causally measurable by perturbing ck.
+(ii) Linear head: each channel's contribution to the logit is exactly wkck, fully decomposable.
+
+Crucially, because the six heads are identical in form, a channel's identity is conferred only by the
+weak supervision that shapes it (§3.4), not by any architectural commitment. We therefore refer to
+the ck as separately-testable evidence channels rather than interpretable concepts: the bottleneck
+guarantees that the decision passes through them and that each can be individually intervened upon,
+but it does not guarantee that channel k means what its name suggests. Whether it does is an empirical
+question we settle by intervention (§3.7), not by assertion--a stance that distinguishes our use of the
+concept-bottleneck construction [Koh et al., 2020] from interpretability-by-design claims.
+
+3.4 Evidence channels and weak supervision
+
+No concept-annotated AGID dataset exists, so we supervise each channel with a cheap, non-parametric
+image-statistic heuristic that produces a soft label c~k(I)  [0, 1]; heads are trained to match these
+labels (§3.5). The six channels are: bitplane-LSB (horizontal autocorrelation of the grayscale
+least-significant-bit plane); freq-radial (slope of the log­log radial power spectrum); color-manifold
+(KL divergence of the image's RGB histogram from a shared real-image color prior); hf-noise
+(variance of the Laplacian); jpeg-quant (variance of DCT-coefficient residuals after re-quantization--
+a JPEG-quantization-trace signal); and texture-geometry (decoupling of per-patch edge density
+from per-patch intensity variance). The labels require no human annotation. We re-emphasize that
+these heuristics define training targets, not guaranteed semantics: the trained channel may track its
+heuristic faithfully or may drift under the task objective, which is precisely what the audit measures.
+
+3.5 Training objective
+
+We minimize a weighted sum of four terms,
+
+         L = Ltask + cLconcept + pLpair + sLsparsity, (c, p, s) = (0.5, 0.2, 0.05),
+
+where Ltask is the binary cross-entropy of y^ against y; Lconcept = k(ck - c~k)2 is the weak concept-
+supervision MSE; Lpair is a content-pairing consistency term that, for in-batch image pairs sharing
+an ImageNet class and label but differing in generator, penalizes the 1 distance between their channel
+vectors (encouraging generator-invariant activations); and Lsparsity = -H(c) is the negative entropy
+of the activation vector, so that minimizing L raises activation entropy and discourages collapse onto
+a single channel. We include Lpair and Lsparsity as active training terms and report them for
+reproducibility; we do not claim either as a contribution, nor do we attribute our results to
+them--their individual effect is not isolated by an ablation in this work (see Limitations).
+
+                                                           5
+3.6 Training protocol (as run)
+
+Training is single-phase and end-to-end (we use no separate backbone warm-up). We use AdamW
+[Loshchilov and Hutter, 2019] with per-group learning rates--10-4 (backbone), 5×10-4 (bottleneck),
+10-3 (classifier)--weight decay 10-4, and a cosine schedule; training uses bfloat16 mixed precision,
+batch size 32 with gradient accumulation of two (effective 64), 256 × 256 inputs, and a fixed seed of
+42. Augmentation is restricted to random cropping, horizontal flipping, and ImageNet normalization;
+we deliberately disable random JPEG-recompression and Gaussian-blur augmentation, because both
+corrupt the low-level statistics that the bitplane-LSB, jpeg-quant, and hf-noise heuristics measure
+and would otherwise inject substantial label noise on those channels. The training set comprises four
+GenImage [Zhu et al., 2023] generators--Stable Diffusion v1.4, BigGAN, ADM, and Midjourney--
+at 25k images per class each, with concept labels precomputed under a shared cross-generator
+normalization and a shared real-image color prior; we train for 20 epochs.1
+
+To probe reliance under dataset-level debiasing (§3.7, §4.3), we additionally retrain the identical
+model on a Grommelt-style debiased corpus [Grommelt et al., 2024]: every image (real and synthetic,
+all splits) is re-encoded to a uniform JPEG quality of 96, neutralizing the PNG-versus-JPEG container
+gap at the data level. This variant uses the same recipe for 10 epochs, with only the training data
+changed, so that any change in channel reliance is attributable to the debiasing alone.
+
+3.7 Audit protocol: causal intervention
+
+Because y^ = (wc + b) admits no bypass path, the functional role of each channel can be measured
+directly rather than inferred. We use three probes. (i) Single-channel ablation (zero-out): we set
+ck  0 and re-evaluate balanced accuracy; the resulting acc quantifies how much of the decision
+depends on channel k. (ii) Counterfactual swap: we replace ck with its value from a different image
+and record prediction flips. (iii) Weight and separation inspection: we report the learned wk and the
+per-channel real-versus-fake separation (Cohen's d). We report all three, but with an explicit ordering
+of authority: weight magnitude (iii) is descriptive only and, as our results show, an unreliable proxy
+for functional reliance; where (iii) and the ablation (i) disagree, we treat the causal intervention as
+authoritative. This protocol--not any claim of intrinsic interpretability--is what we mean by using
+the bottleneck as an audit instrument.
+
+4 Experiments
+
+4.1 Setup
+
+Two models. We evaluate two instances of CBNet-AGID that are identical in architecture and seed
+and differ only in training data: Route B, trained on four raw GenImage generators (20 epochs), and
+E-Delta, retrained on the Grommelt-style Q96-debiased corpus (10 epochs; §3.6). Unless stated
+otherwise, "the detector" denotes Route B.
+
+Datasets and evaluation tiers. Training uses four GenImage [Zhu et al., 2023] generators--Stable
+Diffusion v1.4, BigGAN, ADM, Midjourney--at 25k images per class. We evaluate at four tiers
+of increasing distribution shift: (i) in-distribution (SD-1.4 validation, 12k); (ii) held-out, same
+generators (BigGAN/ADM/Midjourney validation, 2k each); (iii) cross-generator OOD within
+GenImage (GLIDE, Wukong, VQDM--never seen in training, 2k each); and (iv) cross-architecture
+OOD on ForenSynths [Wang et al., 2020] (BigGAN, DeepFake, GauGAN, StarGAN--entirely
+different real and synthetic sources). The Q96-debiased variant re-encodes every image to uniform
+JPEG quality 96.
+
+Metrics. We report accuracy, AUC, average precision, and--uncommonly for this literature--
+per-class real- and fake-accuracy, which proves diagnostic below. Calibration is strong (expected
+calibration error 0.0034).
+
+Baselines and the comparability problem. Direct numerical comparison in this field is fraught:
+at least three training protocols are in active use--P1 (train on SD-1.4 only, test on all generators;
+the original GenImage protocol used by most recent work), P2 (per-generator training averaged
+
+    1Concept labels are precomputed on a center crop while training applies a random crop, so the labels
+approximate the crop center--a minor train-augmentation/label misalignment.
+
+                                                           6
+Table 1: GenImage cross-generator detection, in context. The numbers are not head-to-head.
+Each row is tagged with its training protocol and a comparability flag. Baseline means are literature-
+reported or uniformly re-implemented values under the single-generator protocol P1 (train on SD-v1.4,
+test on the remaining generators); LOTA uses P2 (per-generator training averaged over all eight sources,
+which includes in-distribution diagonal cells and inflates the mean). CBNet-AGID uses P4 (joint
+training on four generators), so its held-out set (GLIDE/Wukong/VQDM/SD-v1.5) is narrower than
+the baselines' cross-generator set -- the comparison is therefore indicative, not a ranking. Baseline
+values from Zhu et al. [2023] and uniform re-implementations (AIDE; IAPL 2025); see text.
+
+Method                             Venue            Protocol (comparability) GenImage cross-gen acc (%)
+
+CNNSpot [Wang et al., 2020]        CVPR 2020        P1 (re-impl.)         64.2
+
+UnivFD [Ojha et al., 2023]         CVPR 2023        P1 (re-impl.)         79.5
+
+AIDE [Yan et al., 2024]            arXiv 2024       P1 (reported)         86.9
+
+NPR [Tan et al., 2024a]            CVPR 2024        P1 (re-impl.)         88.6
+
+DRCT [Chen et al., 2024]           ICML 2024        P1 (re-impl.)         89.5
+
+C2P-CLIP [Tan et al., 2024b]       arXiv 2024       P1 (re-impl.)         95.8
+
+LOTA [Wang et al., 2025]           ICCV 2025 P2 (not comparable)          98.9
+
+CBNet-AGID (ours), in-distribution --               P4 (ours)              99.85
+CBNet-AGID (ours), held-out OOD --                  P4 (ours)              99.67
+
+      LOTA's 98.9% is a P2 mean (per-generator models averaged over all eight sources, including the
+ in-distribution diagonal) and is not directly comparable to the P1 cross-generator means or to CBNet's P4
+held-out number. "re-impl." marks a third-party uniform re-implementation, used because the method's own
+
+                                        paper does not report GenImage under P1.
+
+Table 2: CBNet-AGID (Route B) detection across four evaluation tiers of increasing distribution shift.
+Per-class real- and fake-accuracy are reported (uncommon in this literature) and prove diagnostic in
+the audit.
+
+        Generator        Tier           n  Acc (%)   AUC    Real-acc (%)  Fake-acc (%)
+
+        SD-1.4 (val)     in-dist   12000    99.88   0.9998      99.80         99.95
+        BigGAN           held-out   2000    99.90   1.0000      99.80         100.0
+        ADM              held-out   2000    99.95   0.9997      99.90         100.0
+        Midjourney       held-out   2000    99.85   1.0000      99.90         99.80
+        GLIDE            OOD        2000    99.80   1.0000      99.60         100.0
+        Wukong           OOD        2000    99.45   0.9999      99.60         99.30
+        VQDM             OOD        2000    99.75   1.0000      99.60         99.90
+
+across all eight, used by LOTA, which inflates the mean by including in-distribution cells), and
+P3 (train on ProGAN). CBNet uses a fourth, P4 (joint training on four generators), so for CBNet
+only GLIDE/Wukong/VQDM/SD-1.5 are genuinely held-out, whereas for P1 methods all non-
+SD generators are. We therefore tabulate baselines (Table 1) with an explicit protocol label and
+comparability flag, drawing reported numbers from the most recent uniform re-implementations
+[Zhu et al., 2023, Tan et al., 2024a, Wang et al., 2025, Ojha et al., 2023], and we are explicit that we
+claim competitive, not state-of-the-art, detection. Where a direct, same-protocol comparison is
+possible we make it: we re-evaluate NPR [Tan et al., 2024a] on ForenSynths under our exact pipeline
+(§4.4).
+
+4.2 Detection
+
+GenImage. Route B is strong across all GenImage tiers (Table 2): 99.88% in-distribution, 99.85%
+on held-out training-family generators, and a 99.67% mean on the three unseen GenImage
+generators (GLIDE 99.80, Wukong 99.45, VQDM 99.75), with per-class accuracies all 99.3%.
+
+Cross-architecture (ForenSynths). On a benchmark whose real and synthetic images do not share
+GenImage's acquisition statistics, the same model attains 73.65% mean (AUC 0.820)--StarGAN
+96.42, DeepFake 82.24, BigGAN 61.10, GauGAN 54.82--with markedly low real-accuracy on
+BigGAN (22.2%) and GauGAN (9.7%). We report this here as a measurement and interpret it in
+§4.3c.
+
+                                                           7
+Table 3: Confound battery: change in mean accuracy (acc, percentage points) under controlled
+perturbations of the image container and resolution. Closing the PNG-vs-JPEG container gap (JPEG-
+q95) and destroying high-frequency content (res128) both degrade the detector substantially, while a
+pure PNG re-save (control) and disjoint real-image pools do not.
+
+Perturbation                    mean acc  train-gen   OOD
+
+JPEG-q95 (close container gap)    -10.16  -10.83     -9.28
+PNG re-save (control)             +0.00    +0.00     +0.00
+res128 (destroy high-freq)        -44.64  -43.91     -45.62
+independent real pool                                +0.12
+                                     --      --
+
+Double dissociation (numbers). Comparing Route B and E-Delta on matched versus mismatched
+evaluation distributions (from the GATE-3 audit) yields a clean dissociation, reported here without
+interpretation (see §4.3c): on a Q96-debiased validation set Route B scores 89.75% mean and E-Delta
+99.78%; on the raw cross-generator OOD set Route B scores 99.73% and E-Delta 95.0%.
+
+4.3 Audit
+
+This section is the paper's core. We use the bottleneck's no-bypass guarantee (§3.3) to measure,
+causally, what the detector's accuracy rests on.
+
+4.3a Channel reliance. The learned classifier is y^ = (wc + b) with w =
+[+6.45, +9.84, +6.21, +3.73, -13.53, +7.35] (order: bitplane-LSB, freq-radial, color-manifold,
+hf-noise, jpeg-quant, texture-geometry) and b = -5.06. Three interventions converge on a sharp
+picture.
+
+Single-channel ablation. Zeroing jpeg-quant collapses accuracy to chance on every generator
+(-49.2 to -49.8pp; 99.7%50.2% cumulative); zeroing freq-radial costs a substantial but smaller
+-4 to -30pp; the remaining four channels each cost about a point or less on most generators (texture-
+geometry the largest exception, up to -5.8pp on Wukong). So reliance is concentrated, but not on a
+single channel alone.
+
+Keep-only-one. Restricting the classifier to one channel disentangles their roles: freq-radial alone
+reaches 81.6­99.7% across generators--it is the continuous discriminator--whereas jpeg-quant
+alone yields exactly 50% (its negative weight plus the bias label everything "real"). jpeg-quant
+thus acts as a decision-flipper that, in concert with freq-radial, sets the operating point, rather
+than as a standalone classifier.
+
+Counterfactual swap. Replacing a single channel's value with the opposite class's mean confirms
+the causal lever: swapping jpeg-quant flips 23.9­72.5% of real predictions and 9.8­44.9% of fake
+predictions, while every other channel--freq-radial included--flips under 2% (at most 9% on
+one generator).
+
+Finally, jpeg-quant and freq-radial are -0.80 correlated: the two load-bearing channels encode
+the same low-level cue--a compression/container signal--in scalar and spectral form, and the other
+four channels are essentially inert despite being trained by the concept-MSE loss. Two lessons follow.
+First, weight magnitude is an unreliable proxy for functional role: jpeg-quant has the largest
+|w| yet cannot classify alone, while freq-radial carries the standalone signal--only intervention
+reveals this. Second, the detector is effectively a two-channel, single-cue model; the bottleneck's six
+"concepts" are not six independent pieces of evidence.
+
+4.3b Confound battery. If the load-bearing cue is a compression/container artifact, perturbing that
+artifact should degrade the detector. It does (Table 3). Re-encoding every image to a uniform JPEG
+quality of 95 (closing the PNG-vs-JPEG container gap) drops mean accuracy -10.16pp (worst on
+BigGAN -19.4 and ADM -14.0); re-saving as PNG with no other change costs 0.00pp (a control);
+downsampling to 1282 (destroying high-frequency content) collapses accuracy -44.64pp, driven by a
+real-accuracy collapse; and using disjoint real-image pools across OOD generators changes results by
++0.12pp, ruling out a shared-real-pool artifact.
+
+4.3c Persistence under debiasing, and the inflation/generalization split. We then ask the question
+Grommelt's black-box analysis could not: does the reliance survive removing the confound at the
+
+                                                           8
+Table 4: Single- versus multi-generator training, evaluated identically on ForenSynths (cross-
+architecture). Multi-generator training (P4) buys genuine partial cross-architecture generalization over
+a single-generator model (P1); NPR (P3, ProGAN-trained and thus domain-matched to ForenSynths'
+GANs) is stronger still, underscoring that our generalization is partial, not best-in-class. The contrast
+is directional, not a clean one-factor ablation (the models differ in training code, loss, and data scale
+as well as generator coverage).
+
+Model (ForenSynths)        Train protocol  Mean Acc (%)  Mean AUC
+
+CBNet single-gen (SD-1.4)         P1            52.21       0.528
+CBNet Route B (4 gens)            P4            73.65       0.820
+NPR (ProGAN)                      P3            79.58       0.894
+
+data level? We retrain on the Q96-debiased corpus (E-Delta) and re-audit. The jpeg-quant weight
+shrinks--from -13.53 to -9.11 (a 1.49× reduction)--which, taken alone, would suggest reduced
+reliance. Intervention says otherwise: on the debiased model, zeroing jpeg-quant still costs
+-48.18pp (it remains rank-1 by ablation), while freq-radial's contribution falls to -0.90pp (it
+becomes inert once the container signal is debiased), and jpeg-quant's per-generator real-vs-fake
+separation stays large (Cohen's d -3.84 to -5.47). We label this Outcome C (persistence): the channel
+is not reducible to the trivial PNG-vs-JPEG container label, since the model rebuilds its dependence
+on the same channel from a corpus in which that label has been neutralized. Whether the surviving
+signal reflects generative-pipeline traces or residual compression-history statistics that outlast uniform
+re-encoding is unresolved, and we do not claim the former. This also reads the double-dissociation
+of §4.2: Route B (trained on the confounded corpus) wins on raw-OOD that shares the confound,
+E-Delta wins on Q96-matched data, and both route their decision through jpeg-quant--debiasing
+re-tunes the channel rather than removing reliance on it.
+
+The cross-architecture result bounds how much of the headline number is confound-inflated. Route
+B's accuracy falls from 99.67% on GenImage-OOD to 73.65% on ForenSynths--a 26-point drop
+on a container-mismatched benchmark, consistent with the confound battery. We are careful not
+to attribute the entire gap to the confound: ForenSynths is also a genuine GAN-versus-diffusion
+distribution shift, so the clean confound isolation remains B1/B2 and §4.3a, with ForenSynths as
+corroborating external evidence. The honest reading is partial confound inflation alongside genuine
+partial generalization (quantified next).
+
+4.4 Ablations (what the data support)
+
+Generator coverage (single- vs. multi-generator), on a common benchmark. Evaluated identically
+on ForenSynths, an otherwise-comparable single-generator (SD-1.4-only) model reaches only 52.21%
+(AUC 0.528)--essentially chance, classifying almost every GAN image as real--whereas the four-
+generator Route B reaches 73.65% (AUC 0.820) (Table 4). Multi-generator training therefore buys
+genuine partial cross-architecture generalization (+21.4pp). For reference, NPR [Tan et al., 2024a],
+trained on ProGAN and thus domain-matched to ForenSynths' GANs, scores 79.58% (AUC 0.894)
+on the same benchmark--above Route B, underscoring that Route B's generalization is partial rather
+than complete. We flag that the single-vs-multi contrast is suggestive rather than perfectly controlled:
+the two models also differ in training code, loss, and data scale, so we read it as directional evidence,
+not a clean one-factor ablation.
+
+Ablations not run. Our concept set (K=6), the dual-stream backbone, the no-bottleneck alternative,
+and the loss components were fixed a priori; we did not run controlled ablations over K, backbone
+variants, the presence of the bottleneck, or the individual loss terms (Lpair, Lsparsity). We therefore
+make no empirical claim about the optimality of K=6, the necessity of the bottleneck for accuracy,
+or the contribution of the auxiliary losses; we discuss these as limitations (§6) and future work rather
+than asserting unsupported results.
+
+5 Discussion
+
+Our results admit one honest summary: the detector exhibits partial confound inflation alongside
+genuine partial generalization. Neither extreme holds. It is not a pure container detector--multi-
+
+                                                           9
+generator training yields real cross-architecture transfer (§4.4)--nor is it a robustly general one--much
+of its headline GenImage number does not survive a change of benchmark (§4.3c). The contribution
+of this paper is the ability to say which part is which, and to do so from inside a single competitive
+model.
+
+Intervention is the authority, not weights. The clearest methodological lesson is that the linear
+head's weights describe only its parameters, not the model's functional reliance, and that the appro-
+priate test is causal--single-channel ablation and counterfactual swaps. The point is not abstract:
+reading the weights would have mis-described the model in two opposite directions. The channel
+with the largest weight magnitude, jpeg_quant, cannot classify above chance on its own, while
+freq_radial--a smaller weight--carries the standalone discriminative signal; and after Q96 debias-
+ing the jpeg_quant weight shrinks by 1.49×, which alone would suggest the model had weaned off
+it, whereas ablation shows its functional contribution essentially unchanged. A post-hoc attribution
+that inspects weights (or, by extension, a narration that is never intervened upon) would have reported
+both of these backwards. Only intervention recovers the functional structure.
+
+A two-channel, single-cue decision. That structure is narrow. The decision is carried by
+two channels--jpeg_quant, which acts as a decision-flipper that sets the operating point, and
+freq_radial, the continuous discriminator--and the two are -0.80 correlated, encoding a single
+low-level compression/frequency cue in scalar and spectral form; the remaining four channels are
+near-inert despite being trained. The model, in other words, discovered that one cue suffices and con-
+centrated its decision into a few channels rather than using six independent pieces of evidence. This is
+the empirical reason "interpretable by construction" is the wrong claim for a concept bottleneck: the
+architecture constrains the decision to pass through named channels, but what those channels encode
+and how many matter are outcomes of training that have to be measured, not read off the design.
+
+What persistence under debiasing does and does not show. Retraining on the Q96-debiased corpus
+removes the trivial explanation. If jpeg_quant were merely the PNG-versus-JPEG container label,
+neutralizing that label at the data level should dissolve the model's reliance on it; instead the model
+rebuilds an essentially equal dependence on the same channel (Outcome C). We therefore conclude
+that the dominant cue is a frequency/compression-domain signal not reducible to container format.
+We deliberately stop there. Uniform re-encoding standardizes the final compression step but not the
+images' cumulative processing history, so the surviving signal could be genuine generative-pipeline
+traces, residual compression-history statistics that outlast re-encoding, or a mixture; our experiments
+do not separate these, and we do not claim the channel captures generative semantics. The honest
+claim is bounded--deeper than the container label, shallower than a proof of generative-trace
+detection.
+
+External validity: what ForenSynths adds. Moving to a benchmark whose images do not share
+GenImage's acquisition statistics, the detector falls from 99.67% to 73.65%. We read this as
+corroboration that the GenImage-OOD headline is partly inflated by the shared confound--but
+only corroboration, because ForenSynths is also a genuine GAN-versus-diffusion distribution shift;
+the clean confound isolation remains the within-GenImage perturbations (§4.3a­b). At the same
+time, 73.65% is far above the 52.21% of a single-generator model, so multi-generator training does
+buy genuine partial cross-architecture generalization. We present one comparison plainly: NPR,
+a ProGAN-trained detector domain-matched to ForenSynths' GANs, scores 79.58% on the same
+benchmark--above our model. Our generalization is therefore partial and not best-in-class on this
+cross-architecture set, and we make no claim to the contrary. None of these results is a weakness of
+the audit; each is something the audit was built to reveal.
+
+Design intent is not a substitute for measurement. The architecture included two terms intended to
+discourage shortcut reliance--a cross-generator content-pairing consistency loss and an activation-
+entropy regularizer--yet the trained model still concentrated onto a single confound-aligned channel.
+We did not run ablations isolating these terms and so make no quantitative claim that they succeeded or
+failed (§6). But the qualitative observation matters: stated inductive biases toward diverse, generator-
+invariant evidence did not prevent the collapse. There are intelligible reasons--an entropy term
+rewards diverse activations, which is silent about whether the decision is diverse, and a consistency
+term that rewards generator-invariance is trivially satisfied by a generator-invariant confound. The
+general lesson is the one this paper is built on: an architecture's design intent is a hypothesis about its
+behavior, and behavior must be audited rather than assumed.
+
+                                                          10
+Relation to Grommelt. Grommelt et al. [2024] established that GenImage and similar datasets
+conflate generated-ness with JPEG/format and size artifacts, and that black-box detectors learn
+them--a diagnosis at the level of the dataset. Our contribution is the model-internal counterpart: we
+localize that confound to a specific evidence channel, quantify its causal contribution by intervention,
+and show through the Q96 retrain that the reliance persists rather than dissolving once the dataset is
+debiased. The two views are complementary, and ours answers questions--where in the model, how
+much, and does it survive debiasing--that a black-box analysis structurally cannot.
+
+The bottleneck as a testability surface. Taken together, these findings reposition the concept
+bottleneck for AGID. Its value here is not that it renders the detector interpretable--our audit shows
+it does not, in the naive sense of six meaningful concepts--but that it furnishes a testability surface: a
+small set of channels through which the decision must pass and on which faithfulness can be causally
+probed. On GenImage, that surface let us turn "the benchmark may be confounded" from a suspicion
+into a measurement, and to separate, inside one competitive detector, the portion of its competence
+that is artifact from the portion that genuinely generalizes.
+
+6 Limitations
+
+We frame our contribution as an audit, and an audit's credibility rests on stating plainly what it does
+not establish. We list the limitations from most to least consequential for our claims.
+
+Protocol comparability. Our detector trains on four generators (protocol P4), whereas the base-
+lines we tabulate train on one (P1) or per-generator (P2). Consequently CBNet's held-out set
+(GLIDE/Wukong/VQDM/SD-1.5) is narrower than the cross-generator set those baselines are evalu-
+ated on, and the comparison in Table 1 is not head-to-head; this is precisely why we claim competitive,
+not state-of-the-art, detection. The single- versus multi-generator contrast of §4.4 is likewise not a
+clean one-factor ablation--the two models differ in training code, loss, and data scale as well as in
+generator coverage--so we read its +21-point gap as directional evidence of partial generalization
+rather than a controlled measurement.
+
+Untested architectural and loss choices. Several design decisions were fixed a priori and never
+ablated: the number of channels (K=6), the dual-stream backbone, the presence of the bottleneck
+itself (versus a same-backbone classifier with post-hoc attribution), and the two auxiliary loss terms.
+We therefore make no empirical claim that K=6 is optimal, that the bottleneck is necessary for
+accuracy, or that the content-pairing and entropy regularizers help or hurt the result. In particular,
+because we ran no ablation isolating Lpair or Lsparsity, our observation that the model collapsed
+onto a single cue despite these terms is qualitative: it motivates auditing but does not quantify the
+regularizers' effect.
+
+Confound and distribution shift are entangled on ForenSynths. The 26-point GenImage-to-
+ForenSynths drop is consistent with confound inflation, but ForenSynths also differs from GenImage
+in generator architecture (GAN-heavy) and image source, so the drop conflates confound removal
+with a genuine distribution shift. We do not attribute the full gap to the confound; the clean confound
+isolation rests on the within-GenImage perturbations (§4.3b) and the intervention analysis (§4.3a),
+with ForenSynths serving only as corroborating external evidence.
+
+Attribution ceiling of Q96 debiasing. Our persistence result (Outcome C) shows the dominant
+channel is not reducible to the final PNG-versus-JPEG container label; but uniform Q96 re-encoding
+standardizes only the final compression step and does not erase the images' cumulative processing
+history. We therefore cannot determine whether the surviving signal reflects generative-pipeline traces
+or residual compression-history statistics, and we make no claim that it is the former. Disentangling
+them would require generators and real images with matched, fully controlled processing pipelines,
+which is beyond this work.
+
+Concept identity is supervision-induced. The six channels acquire their meaning from weak
+heuristic supervision rather than from the architecture, and our own audit shows that meaning is not
+preserved under the task objective--two channels dominate and four are inert. We therefore do not
+claim six individually faithful, human-meaningful concepts. The audit characterizes this gap; it does
+not repair it, and producing concepts that are simultaneously faithful and individually informative for
+AI-generated image detection remains open.
+
+                                                          11
+Dataset and real-image scope. Training and most evaluation draw on GenImage, with real images
+from ImageNet, so the specific confound we localize is a property of how GenImage was assembled.
+Grommelt et al. [2024] report similar biases in comparable datasets, which suggests the phenomenon
+is not unique to GenImage; but we have not verified our model-internal account on other corpora and
+make no claim beyond GenImage and the ForenSynths transfer test. Relatedly, the four generators
+span an 8× range of native resolution, and GenImage's real and synthetic images differ systematically
+in container format--dataset-level properties we cannot remove inside the model, and which degrade
+the high-frequency channels unevenly across generators.
+
+Scale of the audit evidence. An early smoke-scale experiment suggested the model's reliance
+"migrated" to other channels after debiasing; this did not survive at full scale, and we attribute it to
+evaluation on the training set. Only the full-scale audit reported here stands. We flag this explicitly to
+discourage over-reading small-scale concept-reliance signals.
+
+Label­crop misalignment. Concept labels were precomputed on a center crop while training applied
+a random crop, so the supervision targets approximate, rather than exactly match, the pixels the model
+saw at each step. We expect this to add mild label noise but not to change the qualitative findings.
+
+7 Conclusion
+
+AI-generated image detection on GenImage is, by the leaderboard, nearly solved. We asked a different
+question: not how high the accuracy is, but what it is made of. To answer it we built a deliberately
+conventional, single-GPU detector and equipped it with a concept bottleneck whose one essential
+property is a no-skip guarantee--every prediction passes through six separately-testable evidence
+channels and nothing else. The detector is competitive, but it is the subject of our study, not its
+contribution; the contribution is the architecture-level audit surface, and the causal intervention
+evidence it makes possible.
+
+Using that surface, we localized a competitive detector's decision to a single frequency/compression
+channel, quantified its reliance by ablation and counterfactual rather than by weight inspection,
+and showed that the reliance persists even after Grommelt-style debiasing neutralizes the obvious
+container cue (Outcome C). The honest summary is partial confound inflation alongside genuine
+partial generalization: a substantial part of the headline GenImage performance does not transfer
+to a container-mismatched benchmark, yet multi-generator training does buy real--if incomplete--
+cross-architecture generalization. The methodological lesson outlasts this particular model: weight
+magnitudes and post-hoc narrations describe a model, whereas only intervention tests it, and an
+interventionable bottleneck is what turns an explanatory claim into a checkable object.
+
+Our work extends, rather than discovers, the GenImage confound. Grommelt et al. [2024] established
+it at the dataset level with black-box detectors; we provide the model-internal counterpart--where
+the reliance lives, how large it is, and whether it survives debiasing--which a black-box analysis
+structurally cannot. Several directions follow: controlled ablations over the loss terms, backbone,
+channel count, and the bottleneck itself; experiments that disentangle generative-pipeline traces from
+residual compression history; and applying the same audit to other detectors and datasets, so as to ask
+of the field's near-saturated numbers, in general, what they are made of.
+
+References
+
+Andrew Brock, Jeff Donahue, and Karen Simonyan. Large scale GAN training for high fidelity
+   natural image synthesis. In International Conference on Learning Representations (ICLR), 2019.
+
+Baoying Chen, Jishen Zeng, Jianquan Yang, and Rui Yang. DRCT: Diffusion reconstruction con-
+   trastive training towards universal detection of diffusion generated images. In International
+   Conference on Machine Learning (ICML), 2024.
+
+Prafulla Dhariwal and Alexander Nichol. Diffusion models beat GANs on image synthesis. In
+   Advances in Neural Information Processing Systems (NeurIPS), 2021.
+
+Ricard Durall, Margret Keuper, and Janis Keuper. Watch your up-convolution: CNN based generative
+   deep neural networks are failing to reproduce spectral distributions. In IEEE/CVF Conference on
+   Computer Vision and Pattern Recognition (CVPR), 2020.
+
+                                                           12
+Joel Frank, Thorsten Eisenhofer, Lea Schönherr, Asja Fischer, Dorothea Kolossa, and Thorsten Holz.
+   Leveraging frequency analysis for deep fake image recognition. In International Conference on
+  Machine Learning (ICML), 2020.
+
+Patrick Grommelt, Louis Weiss, Franz-Josef Pfreundt, and Janis Keuper. Fake or JPEG? revealing
+   common biases in generated image detection datasets. arXiv preprint arXiv:2403.17608, 2024.
+
+Marton Havasi, Sonali Parbhoo, and Finale Doshi-Velez. Addressing leakage in concept bottleneck
+   models. In Advances in Neural Information Processing Systems (NeurIPS), 2022.
+
+Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. Deep residual learning for image
+   recognition. In IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 2016.
+
+Tai-Ming Huang, Wei-Tung Lin, Kai-Lung Hua, Wen-Huang Cheng, Junichi Yamagishi, and Jun-
+   Cheng Chen. ThinkFake: Reasoning in multimodal large language models for AI-generated image
+   detection. arXiv preprint arXiv:2509.19841, 2025.
+
+Yikun Ji, Hong Yan, Jun Lan, Huijia Zhu, Weiqiang Wang, Qi Fan, Liqing Zhang, and Jianfu Zhang.
+   Interpretable and reliable detection of AI-generated images via grounded reasoning in MLLMs.
+   arXiv preprint arXiv:2506.07045, 2025.
+
+Been Kim, Martin Wattenberg, Justin Gilmer, Carrie Cai, James Wexler, Fernanda Viegas, and Rory
+   Sayres. Interpretability beyond feature attribution: Quantitative testing with concept activation
+  vectors (TCAV). In International Conference on Machine Learning (ICML), 2018.
+
+Pang Wei Koh, Thao Nguyen, Yew Siang Tang, Stephen Mussmann, Emma Pierson, Been Kim,
+   and Percy Liang. Concept bottleneck models. In International Conference on Machine Learning
+  (ICML), 2020.
+
+Ilya Loshchilov and Frank Hutter. Decoupled weight decay regularization. In International Confer-
+   ence on Learning Representations (ICLR), 2019.
+
+Anita Mahinpei, Justin Clark, Isaac Lage, Finale Doshi-Velez, and Weiwei Pan. Promises and pitfalls
+   of black-box concept learning models. In ICML Workshop on Theoretic Foundation, Criticism,
+   and Application Trend of Explainable AI, 2021.
+
+Andrei Margeloiu, Matthew Ashman, Umang Bhatt, Yanzhi Chen, Mateja Jamnik, and Adrian Weller.
+   Do concept bottleneck models learn as intended? In ICLR Workshop on Responsible AI, 2021.
+
+Alex Nichol, Prafulla Dhariwal, Aditya Ramesh, Pranav Shyam, Pamela Mishkin, Bob McGrew, Ilya
+   Sutskever, and Mark Chen. GLIDE: Towards photorealistic image generation and editing with
+   text-guided diffusion models. In International Conference on Machine Learning (ICML), 2022.
+
+Utkarsh Ojha, Yuheng Li, and Yong Jae Lee. Towards universal fake image detectors that generalize
+   across generative models. In IEEE/CVF Conference on Computer Vision and Pattern Recognition
+  (CVPR), 2023.
+
+Vitali Petsiuk, Abir Das, and Kate Saenko. RISE: Randomized input sampling for explanation of
+   black-box models. In British Machine Vision Conference (BMVC), 2018.
+
+Robin Rombach, Andreas Blattmann, Dominik Lorenz, Patrick Esser, and Björn Ommer. High-
+   resolution image synthesis with latent diffusion models. In IEEE/CVF Conference on Computer
+  Vision and Pattern Recognition (CVPR), 2022.
+
+Chuangchuang Tan, Huan Liu, Yao Zhao, Shikui Wei, Guanghua Gu, Ping Liu, and Yunchao
+  Wei. Rethinking the up-sampling operations in CNN-based generative network for generalizable
+   deepfake detection. In IEEE/CVF Conference on Computer Vision and Pattern Recognition
+  (CVPR), 2024a.
+
+Chuangchuang Tan, Renshuai Tao, Huan Liu, Guanghua Gu, Baoyuan Wu, Yao Zhao, and Yunchao
+  Wei. C2P-CLIP: Injecting category common prompt in CLIP to enhance generalization in deepfake
+   detection. arXiv preprint arXiv:2408.09647, 2024b.
+
+                                                          13
+Chuangchuang Tan, Yao Zhao, Shikui Wei, Guanghua Gu, Ping Liu, and Yunchao Wei. Frequency-
+   aware deepfake detection: Improving generalizability through frequency space domain learning.
+   In AAAI Conference on Artificial Intelligence (AAAI), 2024c.
+
+Chuangchuang Tan, Jinglu Wang, Xiang Ming, Renshuai Tao, Yunchao Wei, Yao Zhao, and Yan
+   Lu. ForenX: Towards explainable AI-generated image detection with multimodal large language
+   models. arXiv preprint arXiv:2508.01402, 2025.
+
+Hongsong Wang, Renxi Cheng, Yang Zhang, Chaolei Han, and Jie Gui. LOTA: Bit-planes guided
+  AI-generated image detection. In IEEE/CVF International Conference on Computer Vision (ICCV),
+   2025. arXiv:2510.14230.
+
+Sheng-Yu Wang, Oliver Wang, Richard Zhang, Andrew Owens, and Alexei A. Efros. CNN-generated
+   images are surprisingly easy to spot... for now. In IEEE/CVF Conference on Computer Vision and
+  Pattern Recognition (CVPR), 2020.
+
+Zhendong Wang, Jianmin Bao, Wengang Zhou, Weilun Wang, Hezhen Hu, Hong Chen, and Houqiang
+   Li. DIRE for diffusion-generated image detection. In IEEE/CVF International Conference on
+  Computer Vision (ICCV), 2023.
+
+Shilin Yan, Ouxiang Li, Jiayin Cai, Yanbin Hao, Xiaolong Jiang, Yao Hu, and Weidi Xie. A sanity
+   check for AI-generated image detection. arXiv preprint arXiv:2406.19435, 2024.
+
+Ziyin Zhou, Yunpeng Luo, Yuanchen Wu, Ke Sun, Jiayi Ji, Ke Yan, Shouhong Ding, Xiaoshuai
+   Sun, Yunsheng Wu, and Rongrong Ji. AIGI-Holmes: Towards explainable and generalizable
+  AI-generated image detection via multimodal large language models. In IEEE/CVF International
+  Conference on Computer Vision (ICCV), 2025. arXiv:2507.02664.
+
+Mingjian Zhu, Hanting Chen, Qiangyu Yan, Xudong Huang, Guanyu Lin, Wei Li, Zhijun Tu,
+   Hailin Hu, Jie Hu, and Yunhe Wang. GenImage: A million-scale benchmark for detecting AI-
+   generated image. In Advances in Neural Information Processing Systems (NeurIPS), Datasets and
+  Benchmarks Track, 2023.
+
+                                                          14
+

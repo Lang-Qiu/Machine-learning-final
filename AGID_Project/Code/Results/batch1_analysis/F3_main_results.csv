@@ -1,0 +1,9 @@
+Generator,Type,Route,n,Accuracy (%),AUC,Real Acc (%),Fake Acc (%)
+SD-1.4 (val),ID — single-gen train,A,12000,99.83333333333333,0.9998716111111111,99.7,99.96666666666667
+SD-1.4 (val),ID — multi-gen train,B,12000,99.875,0.9998380833333332,99.8,99.95
+BigGAN (held-out),ID — multi-gen train,B,2000,99.9,1.0,99.8,100.0
+ADM (held-out),ID — multi-gen train,B,2000,99.95,0.999702,99.9,100.0
+Midjourney (held-out),ID — multi-gen train,B,2000,99.85000000000001,0.9999709999999999,99.9,99.8
+GLIDE,OOD — unseen generator,B,2000,99.8,1.0,99.6,100.0
+Wukong,OOD — unseen generator,B,2000,99.45,0.999857,99.6,99.3
+VQDM,OOD — unseen generator,B,2000,99.75,0.999987,99.6,99.9

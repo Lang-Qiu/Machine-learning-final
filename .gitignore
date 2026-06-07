@@ -1,0 +1,42 @@
+# Local agent/runtime state
+.claude/
+.codex/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Large datasets and model artifacts
+AGID_Project/Data/
+AGID_Project/Checkpoints/
+AGID_Project/Logs/
+AGID_Project/Code/Logs/
+AGID_Project/Results/
+AGID_Project/Code/tmp_hf_cache/
+*.pth
+*.pt
+*.ckpt
+*.onnx
+*.npy
+*.npz
+*.zip
+*.tar
+*.tar.gz
+*.7z
+
+# LaTeX/intermediate build artifacts
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.out
+*.synctex.gz
+*.toc
+*.lof
+*.lot
+
+# OS/editor noise
+Thumbs.db
+.DS_Store
+*.tmp
+*.bak

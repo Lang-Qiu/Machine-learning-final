@@ -1,0 +1,12 @@
+% Route B vs E-Delta double dissociation (data: edelta/gate3_audit/gate3_full_audit.json).
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.62\textwidth]{figs/fig_dissociation.pdf}
+  \caption{\textbf{Double dissociation between Route B and E-Delta.} On a Q96-debiased
+    validation set (matched to E-Delta's training) the debiased model wins (99.8 vs 89.8);
+    on the raw cross-generator OOD set (matched to Route B's training) Route B wins (99.7 vs
+    95.0). Each model is strongest on the container statistics it was trained under, yet both
+    route their decision through the same compression channel---debiasing \emph{re-tunes} the
+    channel rather than removing reliance on it (\S{}4.3c).}
+  \label{fig:dissoc}
+\end{figure}

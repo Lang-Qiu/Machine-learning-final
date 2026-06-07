@@ -1,0 +1,14 @@
+% Cross-benchmark generalization figure (data: body.tex 4.2/4.3c/4.4).
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.93\textwidth]{figs/fig_generalization.pdf}
+  \caption{\textbf{Partial confound inflation alongside genuine partial generalization.}
+    Route B reaches 99.67\% mean on held-out GenImage generators but only 73.65\% on
+    cross-architecture ForenSynths---a 26-point drop on a container-mismatched benchmark,
+    consistent with the compression confound. Yet 73.65\% is far above an otherwise-identical
+    single-generator model (52.21\%, near chance), so multi-generator training buys
+    \emph{genuine} partial cross-architecture transfer ($+21$\,pp). NPR, trained on ProGAN and
+    thus domain-matched to ForenSynths' GANs, scores 79.58\%---above Route B---so the transfer
+    is partial, not best-in-class (\S{}4.3c, \S{}4.4).}
+  \label{fig:generalization}
+\end{figure}

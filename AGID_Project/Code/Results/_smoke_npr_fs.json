@@ -1,0 +1,38 @@
+{
+  "method": "npr",
+  "ckpt": "E:\\LQiu\\lab_folder\\Machine_learning\\AGID_Project\\Code\\external\\NPR-DeepfakeDetection\\NPR.pth",
+  "results": {
+    "biggan": {
+      "n": 100,
+      "acc": 0.84,
+      "auc": 0.8912,
+      "ap": 0.8346403200134276,
+      "real_acc": 0.7,
+      "fake_acc": 0.98
+    },
+    "deepfake": {
+      "n": 100,
+      "acc": 0.86,
+      "auc": 0.9384,
+      "ap": 0.8906347687400319,
+      "real_acc": 0.72,
+      "fake_acc": 1.0
+    },
+    "gaugan": {
+      "n": 100,
+      "acc": 0.85,
+      "auc": 0.9029999999999999,
+      "ap": 0.8502131389081629,
+      "real_acc": 0.72,
+      "fake_acc": 0.98
+    },
+    "stargan": {
+      "n": 100,
+      "acc": 0.75,
+      "auc": 0.868,
+      "ap": 0.8629646697152906,
+      "real_acc": 0.88,
+      "fake_acc": 0.62
+    }
+  }
+}

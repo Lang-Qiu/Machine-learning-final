@@ -1,0 +1,109 @@
+{
+  "config": {
+    "root": "E:\\LQiu\\lab_folder\\Machine_learning\\AGID_Project\\Data\\GenImage_debiased_smoke",
+    "generators": [
+      "Stable_Diffusion_v1.4",
+      "BigGAN",
+      "ADM",
+      "Midjourney"
+    ],
+    "split": "train",
+    "use_shared_concept_labels": true,
+    "val_generators": "all",
+    "max_train_samples": null,
+    "max_val_samples": null,
+    "n_concepts": 6,
+    "pretrained": true,
+    "signal_channels": 512,
+    "epochs": 6,
+    "batch_size": 32,
+    "accum_steps": 2,
+    "lr_backbone": 0.0001,
+    "lr_head": 0.0005,
+    "lr_classifier": 0.001,
+    "weight_decay": 0.0001,
+    "lambda_concept": 0.5,
+    "lambda_pair": 0.2,
+    "lambda_sparsity": 0.05,
+    "amp": true,
+    "image_size": 256,
+    "num_workers": 2,
+    "disable_destructive_aug": true,
+    "out_dir": "E:\\LQiu\\lab_folder\\Machine_learning\\AGID_Project\\Logs\\cbnet_debiased_smoke",
+    "ckpt_every": 1,
+    "eval_every": 1,
+    "seed": 42
+  },
+  "final_eval": {
+    "BigGAN": null,
+    "Midjourney": null,
+    "Wukong": null,
+    "Stable_Diffusion_v1.4": null,
+    "Stable_Diffusion_v1.5": null,
+    "ADM": null,
+    "GLIDE": null,
+    "VQDM": null
+  },
+  "history": [
+    {
+      "epoch": 1,
+      "time_sec": 473.96036076545715,
+      "total": 0.3616838131534153,
+      "task": 0.36214767322652397,
+      "concept": 0.12810668930329341,
+      "content_pair": 0.017834845156953476,
+      "sparsity": -1.361694446320889,
+      "lr": 0.0001
+    },
+    {
+      "epoch": 2,
+      "time_sec": 456.83799052238464,
+      "total": 0.14424765964652253,
+      "task": 0.1396049960269935,
+      "concept": 0.1348804176718429,
+      "content_pair": 0.012898966573130315,
+      "sparsity": -1.3075526025427646,
+      "lr": 9.330127018922194e-05
+    },
+    {
+      "epoch": 3,
+      "time_sec": 445.9059407711029,
+      "total": 0.07651199993974211,
+      "task": 0.08437481941305858,
+      "concept": 0.11604813280226052,
+      "content_pair": 0.012400365221673336,
+      "sparsity": -1.3673479206983061,
+      "lr": 7.500000000000001e-05
+    },
+    {
+      "epoch": 4,
+      "time_sec": 420.65607810020447,
+      "total": 0.04140288747097922,
+      "task": 0.05785683560566702,
+      "concept": 0.10337785629927367,
+      "content_pair": 0.010952986258754377,
+      "sparsity": -1.4066623584099445,
+      "lr": 5e-05
+    },
+    {
+      "epoch": 5,
+      "time_sec": 360.4993052482605,
+      "total": 0.023611908904339684,
+      "task": 0.04441436750813387,
+      "concept": 0.09617821079468715,
+      "content_pair": 0.012121600350956729,
+      "sparsity": -1.4263177128539437,
+      "lr": 2.500000000000001e-05
+    },
+    {
+      "epoch": 6,
+      "time_sec": 366.68341422080994,
+      "total": 0.01553740755670246,
+      "task": 0.03879015036244104,
+      "concept": 0.09208323095756032,
+      "content_pair": 0.012635345993309155,
+      "sparsity": -1.4364186855719767,
+      "lr": 6.698729810778065e-06
+    }
+  ]
+}

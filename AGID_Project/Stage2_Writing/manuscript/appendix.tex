@@ -1,0 +1,334 @@
+% =====================================================================
+%  APPENDIX -- supplementary tables. Every number is transcribed from a
+%  verified disk artifact under AGID_Project/Code/Results/ (cited per table).
+%  No main-text claim depends on this material; it only adds detail.
+% =====================================================================
+\appendix
+
+\section{Training and Hyperparameter Configuration}
+\label{app:hyper}
+
+Table~\ref{tab:hyper} records the as-run configuration for both models
+(\S{}3.5--3.6). The two instances differ only in training data and epoch budget.
+
+\begin{table}[h]
+  \centering
+  \caption{As-run training configuration. Source: training scripts / \S{}3.5--3.6.}
+  \label{tab:hyper}
+  \small
+  \begin{tabular}{ll}
+    \toprule
+    Component / setting & Value \\
+    \midrule
+    Pixel stream            & ResNet-50, ImageNet-pretrained ($\to 2048{\times}8{\times}8$) \\
+    Signal stream           & NPR residual $\to$ 5-layer strided CNN ($\to 512{\times}8{\times}8$) \\
+    Bottleneck              & $K{=}6$ heads: $1{\times}1$ conv($2560{\to}640$), BN, ReLU, $1{\times}1$ conv, GAP, $\sigma$ \\
+    Parameters              & 38.0M (CBNet-AGID) / 28.2M (BaselinePlain, no bottleneck) \\
+    Optimizer               & AdamW, weight decay $10^{-4}$, cosine schedule \\
+    Learning rates          & $10^{-4}$ backbone / $5\times10^{-4}$ bottleneck / $10^{-3}$ classifier \\
+    Precision / batch       & bfloat16 AMP; batch 32 $\times$ grad-accum 2 (effective 64) \\
+    Input size              & $256\times256$ \\
+    Augmentation            & random crop, horizontal flip, ImageNet norm \\
+                            & (JPEG-recompression and Gaussian-blur \emph{disabled}) \\
+    Loss                    & $L_{\text{task}}+0.5\,L_{\text{concept}}+0.2\,L_{\text{pair}}+0.05\,L_{\text{sparsity}}$ \\
+    Seeds                   & 42 (primary); 1, 2 (replications) \\
+    Epochs                  & 20 (Route B) / 10 (E-Delta, Q96-debiased) \\
+    Training data           & 4 GenImage generators (SD-1.4, BigGAN, ADM, MJ), 25k/class \\
+    Hardware                & single RTX 4060 Laptop, 8\,GB VRAM \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Per-Seed Classifier Weights and Concept Reliance}
+\label{app:seeds}
+
+Tables~\ref{tab:seed-weights} and~\ref{tab:seed-zeroout} give the full multi-seed audit
+behind \S{}4.3a. The linear-head weights and the single-channel zero-out costs are both
+seed-unstable in \emph{which} channel ranks first, while the compression pair
+\{\texttt{freq-radial}, \texttt{jpeg-quant}\} is the top-two zero-out in every seed.
+With only three seeds we do not report confidence intervals; the cross-seed spread in
+Tables~\ref{tab:seed-weights}--\ref{tab:seed-zeroout} should be read as an illustrative
+range, not a calibrated variance estimate.
+
+\begin{table}[h]
+  \centering
+  \caption{Learned linear-head weights $\mathbf{w}$ and bias $b$ per seed (order:
+    bitplane-LSB, freq-radial, color-manifold, hf-noise, jpeg-quant, texture-geometry).
+    Source: \texttt{batch1\_analysis/A2\_classifier\_weights.json} (seed 42); multi-seed
+    record in \texttt{04\_Stage4\_Evidence.md}.}
+  \label{tab:seed-weights}
+  \small
+  \begin{tabular}{lrrrrrrr}
+    \toprule
+    Seed & bitplane & freq-rad. & color & hf-noise & jpeg-q. & texture & bias \\
+    \midrule
+    42 & $+6.45$ & $+9.84$ & $+6.21$ & $+3.73$ & $\mathbf{-13.53}$ & $+7.35$ & $-5.06$ \\
+    1  & $+9.07$ & $\mathbf{+11.58}$ & $-6.89$ & $+7.29$ & $-9.63$ & $-9.36$ & $+1.07$ \\
+    2  & $+9.43$ & $\mathbf{+10.77}$ & $+6.56$ & $+5.60$ & $-9.94$ & $-10.51$ & $-1.97$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[h]
+  \centering
+  \caption{Single-channel zero-out cost $\Delta$acc (pp), mean over the seven evaluation
+    generators, per seed. The compression pair is bold. Source:
+    \texttt{seed\{42,1,2\}\_analysis/A3\_concept\_zeroout.csv}.}
+  \label{tab:seed-zeroout}
+  \small
+  \begin{tabular}{lrrrrrr}
+    \toprule
+    Seed & bitplane & freq-rad. & color & hf-noise & jpeg-q. & texture \\
+    \midrule
+    42 & $-0.01$ & $\mathbf{-17.24}$ & $-0.03$ & $-0.04$ & $\mathbf{-49.54}$ & $-1.58$ \\
+    1  & $-0.64$ & $\mathbf{-38.66}$ & $-0.97$ & $-1.04$ & $\mathbf{-24.49}$ & $-3.23$ \\
+    2  & $-0.14$ & $\mathbf{-24.73}$ & $-0.12$ & $-0.19$ & $\mathbf{-25.73}$ & $-7.81$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Full Single-Channel Ablation (Seed 42)}
+\label{app:ablation}
+
+Table~\ref{tab:full-ablation} expands the seed-42 zero-out to every generator. Zeroing
+\texttt{jpeg-quant} costs $\approx$49\,pp uniformly (it flips the operating point on all
+generators); \texttt{freq-radial} costs a larger but generator-dependent amount; the other
+four channels are inert ($|\Delta|<6$\,pp, mostly $<1$\,pp).
+
+\begin{table}[h]
+  \centering
+  \caption{Per-generator single-channel zero-out $\Delta$acc (pp), seed-42 model. Source:
+    \texttt{seed42\_analysis/A3\_concept\_zeroout.csv}.}
+  \label{tab:full-ablation}
+  \small
+  \begin{tabular}{lrrrrrr}
+    \toprule
+    Generator & bitplane & freq-rad. & color & hf-noise & jpeg-q. & texture \\
+    \midrule
+    SD-1.4     & $0.00$  & $-24.60$ & $+0.05$ & $-0.05$ & $-49.60$ & $-2.60$ \\
+    BigGAN     & $+0.15$ & $-30.25$ & $+0.15$ & $+0.10$ & $-49.70$ & $+0.15$ \\
+    ADM        & $+0.05$ & $-21.50$ & $+0.05$ & $+0.05$ & $-49.80$ & $-0.90$ \\
+    Midjourney & $-0.05$ & $-15.40$ & $-0.15$ & $0.00$  & $-49.45$ & $-0.80$ \\
+    GLIDE      & $+0.10$ & $-4.20$  & $+0.15$ & $+0.05$ & $-49.55$ & $+0.15$ \\
+    Wukong     & $-0.35$ & $-19.70$ & $-0.35$ & $-0.45$ & $-49.20$ & $-5.75$ \\
+    VQDM       & $+0.05$ & $-5.05$  & $-0.10$ & $+0.05$ & $-49.50$ & $-1.30$ \\
+    \midrule
+    mean       & $-0.01$ & $-17.24$ & $-0.03$ & $-0.04$ & $-49.54$ & $-1.58$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Concept Correlation Matrix}
+\label{app:corr}
+
+Table~\ref{tab:corr} is the Pearson correlation among the six channel activations on the
+training data. The load-bearing pair \texttt{freq-radial}/\texttt{jpeg-quant} is the
+strongest off-diagonal entry ($-0.80$), confirming the two encode one cue.
+
+\begin{table}[h]
+  \centering
+  \caption{Pearson correlation of channel activations. Source:
+    \texttt{batch1\_analysis/A5\_pearson.csv}.}
+  \label{tab:corr}
+  \small
+  \begin{tabular}{lrrrrrr}
+    \toprule
+     & bitplane & freq-rad. & color & hf-noise & jpeg-q. & texture \\
+    \midrule
+    bitplane  & $1.00$  & $0.42$  & $0.59$  & $-0.17$ & $-0.57$ & $-0.11$ \\
+    freq-rad. & $0.42$  & $1.00$  & $0.45$  & $-0.23$ & $\mathbf{-0.80}$ & $0.24$ \\
+    color     & $0.59$  & $0.45$  & $1.00$  & $-0.23$ & $-0.60$ & $-0.10$ \\
+    hf-noise  & $-0.17$ & $-0.23$ & $-0.23$ & $1.00$  & $0.41$  & $0.49$ \\
+    jpeg-q.   & $-0.57$ & $\mathbf{-0.80}$ & $-0.60$ & $0.41$  & $1.00$  & $0.03$ \\
+    texture   & $-0.11$ & $0.24$  & $-0.10$ & $0.49$  & $0.03$  & $1.00$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Extended Detection, OOD, and Calibration}
+\label{app:ext}
+
+Table~\ref{tab:calib} gives per-generator calibration (the pooled ECE 0.0034 quoted in
+\S{}4.1 is the last row). Table~\ref{tab:forensynths-full} gives the full ForenSynths
+metrics behind \S{}4.2, and Table~\ref{tab:baseline-ood} the no-bottleneck baseline OOD
+detail behind \S{}4.5.
+
+\begin{table}[h]
+  \centering
+  \caption{Per-generator calibration (2000 images/generator). Source:
+    \texttt{batch1\_analysis/C5\_calibration.json}.}
+  \label{tab:calib}
+  \small
+  \begin{tabular}{lrrr}
+    \toprule
+    Generator & Brier & NLL & ECE \\
+    \midrule
+    SD-1.4     & $0.00124$ & $0.00651$ & $0.00472$ \\
+    BigGAN     & $0.00111$ & $0.00538$ & $0.00256$ \\
+    ADM        & $0.00092$ & $0.00573$ & $0.00292$ \\
+    Midjourney & $0.00241$ & $0.01219$ & $0.00223$ \\
+    GLIDE      & $0.00144$ & $0.00542$ & $0.00339$ \\
+    VQDM       & $0.00188$ & $0.00753$ & $0.00428$ \\
+    Wukong     & $0.00424$ & $0.01695$ & $0.00653$ \\
+    \midrule
+    pooled (14k) & $0.00189$ & $0.00853$ & $\mathbf{0.00335}$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[h]
+  \centering
+  \caption{ForenSynths per-generator metrics, Route B. Source:
+    \texttt{cbnet\_multigen\_forensynths.json}.}
+  \label{tab:forensynths-full}
+  \small
+  \begin{tabular}{lrrrrr}
+    \toprule
+    Generator & Acc & AUC & AP & real-acc & fake-acc \\
+    \midrule
+    StarGAN  & $96.42$ & $0.999$ & $0.997$ & $92.85$ & $100.0$ \\
+    DeepFake & $82.24$ & $0.934$ & $0.946$ & $70.30$ & $94.22$ \\
+    BigGAN   & $61.10$ & $0.692$ & $0.641$ & $22.20$ & $100.0$ \\
+    GauGAN   & $54.82$ & $0.657$ & $0.582$ & $9.72$  & $99.92$ \\
+    \midrule
+    mean     & $73.65$ & $0.820$ & $0.791$ & $48.77$ & $98.53$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[h]
+  \centering
+  \caption{No-bottleneck baseline (BaselinePlain) on GenImage OOD generators. Source:
+    \texttt{ood\_eval\_baseline\_nobottleneck.json}.}
+  \label{tab:baseline-ood}
+  \small
+  \begin{tabular}{lrrrr}
+    \toprule
+    Generator & Acc & AUC & real-acc & fake-acc \\
+    \midrule
+    GLIDE  & $99.90$ & $1.000$ & $99.80$ & $100.0$ \\
+    Wukong & $99.00$ & $1.000$ & $99.80$ & $98.20$ \\
+    VQDM   & $99.90$ & $1.000$ & $99.80$ & $100.0$ \\
+    \midrule
+    mean   & $99.60$ & $1.000$ & $99.80$ & $99.40$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{E-Delta (Q96-Debiased) Full Audit}
+\label{app:edelta}
+
+Tables~\ref{tab:edelta-weights}--\ref{tab:dissoc} expand Outcome C (\S{}4.3c). After
+debiasing, the \texttt{jpeg-quant} weight shrinks $1.49\times$ yet its zero-out cost stays
+$-48.18$\,pp (rank-1 by ablation), while \texttt{freq-radial} becomes inert; the Cohen's
+$d$ for \texttt{jpeg-quant} remains large and negative on every generator. The
+double-dissociation detail (Table~\ref{tab:dissoc}) shows each model winning on the
+container statistics it was trained under.
+
+\begin{table}[h]
+  \centering
+  \caption{Linear-head weights, Route B vs E-Delta (Q96-debiased), and the debiased
+    single-channel zero-out cost. Source:
+    \texttt{edelta/gate3\_audit/gate3\_full\_audit.json}.}
+  \label{tab:edelta-weights}
+  \small
+  \begin{tabular}{lrrr}
+    \toprule
+    Channel & $w$ (Route B) & $w$ (E-Delta) & $\Delta$acc zero-out (E-Delta, pp) \\
+    \midrule
+    bitplane-LSB     & $+6.45$  & $+4.98$ & $-0.23$ \\
+    freq-radial      & $+9.84$  & $+6.37$ & $-0.90$ \\
+    color-manifold   & $+6.21$  & $+5.07$ & $-0.28$ \\
+    hf-noise         & $+3.73$  & $+2.83$ & $-0.25$ \\
+    jpeg-quant       & $-13.53$ & $-9.11$ & $\mathbf{-48.18}$ \\
+    texture-geometry & $+7.35$  & $+5.32$ & $-0.35$ \\
+    \midrule
+    bias             & $-5.06$  & $-3.91$ & --- \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[h]
+  \centering
+  \caption{Per-generator Cohen's $d$ (real vs fake separation) on the E-Delta model.
+    \texttt{jpeg-quant} stays strongly negative everywhere. Source:
+    \texttt{gate3\_full\_audit.json}.}
+  \label{tab:edelta-cohend}
+  \small
+  \begin{tabular}{lrrrrrr}
+    \toprule
+    Generator & bitplane & freq-rad. & color & hf-noise & jpeg-q. & texture \\
+    \midrule
+    SD-1.4     & $2.65$ & $4.75$ & $2.61$ & $0.80$  & $\mathbf{-3.84}$ & $1.97$ \\
+    BigGAN     & $1.58$ & $7.43$ & $1.96$ & $-0.32$ & $\mathbf{-5.47}$ & $1.42$ \\
+    ADM        & $1.99$ & $5.29$ & $2.20$ & $-0.07$ & $\mathbf{-4.75}$ & $1.75$ \\
+    Midjourney & $2.09$ & $4.47$ & $2.27$ & $0.18$  & $\mathbf{-4.44}$ & $1.55$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[h]
+  \centering
+  \caption{Double dissociation, per-generator accuracy (\%). Each model is strongest on the
+    container statistics matching its training data. Source:
+    \texttt{gate3\_full\_audit.json}.}
+  \label{tab:dissoc}
+  \small
+  \begin{tabular}{lrrrrr}
+    \toprule
+    Model & \multicolumn{4}{c}{per-generator accuracy (\%)} & mean \\
+    \midrule
+    \multicolumn{6}{l}{\emph{Q96-debiased val} \quad (SD-1.4, BigGAN, ADM, MJ)} \\
+    Route B & $93.4$ & $81.9$ & $87.7$ & $96.0$ & $89.75$ \\
+    E-Delta & $99.8$ & $100.0$ & $99.7$ & $99.6$ & $99.78$ \\
+    \midrule
+    \multicolumn{6}{l}{\emph{Raw OOD} \quad (GLIDE, Wukong, VQDM)} \\
+    Route B & $100.0$ & $99.2$ & $100.0$ &        & $99.73$ \\
+    E-Delta & $98.0$  & $99.8$ & $87.2$  &        & $95.0$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Post-Hoc Attribution Head-to-Head (No-Bottleneck Baseline)}
+\label{app:probe}
+
+Table~\ref{tab:probe} reports the experiment behind the ``does post-hoc attribution recover
+the same account?'' paragraph of \S{}4.5. On 1680 evaluation images (240 per generator;
+70/30 train/test split) we fit a ridge linear probe from the baseline's 2560-d pooled
+features to each dataset-level concept heuristic (\S{}3.4), and then ablate the probe
+direction $\hat{v}$ from the features and re-run the classifier
+($\text{logit}'=\text{logit}-(\mathbf{f}\!\cdot\!\hat{v})(\mathbf{w}\!\cdot\!\hat{v})$). The
+forensic statistics are decodable (held-out $R^2$), but the decoded directions are nearly
+orthogonal to the classifier weight ($\cos$), and---because the baseline saturates
+(test-split accuracy 100\%, overall 99.88\%)---no single-direction ablation moves accuracy
+(the random-direction control gives $0.0\pm0.0$\,pp). The bottleneck's causal
+\texttt{jpeg-quant} zero-out ($-49.5$\,pp) has no apples-to-apples analog here, which is the
+point: the plain backbone offers no single ablatable locus.
+
+\begin{table}[h]
+  \centering
+  \caption{Post-hoc concept probe + single-direction ablation on the no-bottleneck baseline.
+    Source: \texttt{p0\_attribution\_headtohead.json}.}
+  \label{tab:probe}
+  \small
+  \begin{tabular}{lrrr}
+    \toprule
+    Concept (probe target) & probe $R^2$ & $\cos(\hat{v},\hat{\mathbf{w}})$ & $\Delta$acc (pp) \\
+    \midrule
+    bitplane-LSB     & $0.81$ & $-0.009$ & $0.0$ \\
+    freq-radial      & $0.61$ & $-0.020$ & $0.0$ \\
+    color-manifold$^{\dagger}$ & --- & --- & $0.0$ \\
+    hf-noise         & $0.76$ & $+0.019$ & $0.0$ \\
+    jpeg-quant       & $\mathbf{0.88}$ & $+0.003$ & $0.0$ \\
+    texture-geometry & $0.35$ & $-0.003$ & $0.0$ \\
+    \midrule
+    random direction (control) & --- & ${\approx}0.02$ & $0.0\pm0.0$ \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{2pt}
+  {\footnotesize $^{\dagger}$\,\texttt{color-manifold} is excluded: its heuristic requires the
+  shared real-image color prior, which was not loaded in this standalone probe script, leaving
+  the target constant (a degenerate $R^2{=}1.0$). It does not affect the compression-pair
+  conclusion.}
+\end{table}

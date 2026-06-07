@@ -1,0 +1,489 @@
+{
+  "config": {
+    "root": "E:\\LQiu\\lab_folder\\Machine_learning\\AGID_Project\\Data\\GenImage",
+    "generators": [
+      "Stable_Diffusion_v1.4",
+      "BigGAN",
+      "ADM",
+      "Midjourney"
+    ],
+    "split": "train_25k",
+    "use_shared_concept_labels": true,
+    "val_generators": "Stable_Diffusion_v1.4",
+    "max_train_samples": null,
+    "max_val_samples": 1000,
+    "n_concepts": 6,
+    "pretrained": true,
+    "signal_channels": 512,
+    "epochs": 20,
+    "batch_size": 32,
+    "accum_steps": 2,
+    "lr_backbone": 0.0001,
+    "lr_head": 0.0005,
+    "lr_classifier": 0.001,
+    "weight_decay": 0.0001,
+    "lambda_concept": 0.5,
+    "lambda_pair": 0.2,
+    "lambda_sparsity": 0.05,
+    "amp": true,
+    "image_size": 256,
+    "num_workers": 2,
+    "disable_destructive_aug": true,
+    "out_dir": "E:\\LQiu\\lab_folder\\Machine_learning\\AGID_Project\\Logs\\cbnet_multigen_seed1",
+    "ckpt_every": 5,
+    "eval_every": 1,
+    "seed": 1
+  },
+  "final_eval": {
+    "Stable_Diffusion_v1.4": {
+      "name": "Stable_Diffusion_v1.4",
+      "n": 2000,
+      "acc": 1.0,
+      "auc": 1.0,
+      "real_acc": 1.0,
+      "fake_acc": 1.0
+    }
+  },
+  "history": [
+    {
+      "epoch": 1,
+      "time_sec": 1344.1177325248718,
+      "total": 0.15651956315636634,
+      "task": 0.15577730400681494,
+      "concept": 0.137747831530571,
+      "content_pair": 0.011678779296875,
+      "sparsity": -1.4093430871772765,
+      "lr": 0.0001,
+      "mean_acc": 0.9865,
+      "mean_auc": 0.99924,
+      "eval": [
+        {
+          "name": "Stable_Diffusion_v1.4",
+          "n": 2000,
+          "acc": 0.9865,
+          "auc": 0.99924,
+          "real_acc": 0.98,
+          "fake_acc": 0.993
+        }
+      ]
+    },
+    {
+      "epoch": 2,
+      "time_sec": 1294.3759727478027,
+      "total": 0.017362102013230324,
+      "task": 0.05057215430036187,
+      "concept": 0.08210567277550697,
+      "content_pair": 0.010144296875,
+      "sparsity": -1.5258390906143189,
+      "lr": 9.938441702975689e-05,
+      "mean_acc": 0.995,
+      "mean_auc": 0.9994919999999999,
+      "eval": [
+        {
+          "name": "Stable_Diffusion_v1.4",
+          "n": 2000,
+          "acc": 0.995,
+          "auc": 0.9994919999999999,
+          "real_acc": 0.992,
+          "fake_acc": 0.998
+        }
+      ]
+    },
+    {
+      "epoch": 3,
+      "time_sec": 1259.8226382732391,
+      "total": -0.013462119718194008,
+      "task": 0.033821405616253616,
+      "concept": 0.060063132202029225,
+      "content_pair": 0.008832314453125,
+      "sparsity": -1.5816322185897826,
+      "lr": 9.755282581475769e-05,
+      "mean_acc": 0.9965,
+      "mean_auc": 0.99993,
+      "eval": [
+        {
+          "name": "Stable_Diffusion_v1.4",
+          "n": 2000,
+          "acc": 0.9965,
+          "auc": 0.99993,
+          "real_acc": 0.996,
+          "fake_acc": 0.997
+        }
+      ]
+    },
+    {
+      "epoch": 4,
+      "time_sec": 1303.9573395252228,
+      "total": -0.028106038205623626,
+      "task": 0.025550321107655764,
+      "concept": 0.04977343970030546,
+      "content_pair": 0.00965455078125,
+      "sparsity": -1.6094854315567018,
+      "lr": 9.45503262094184e-05,
+      "mean_acc": 0.9935,
+      "mean_auc": 0.9999330000000001,
+      "eval": [
+        {
+          "name": "Stable_Diffusion_v1.4",
+          "n": 2000,
+          "acc": 0.9935,
+          "auc": 0.9999330000000001,
+          "real_acc": 0.998,
+          "fake_acc": 0.989
+        }
+      ]
+    },
+    {
+      "epoch": 5,
+      "time_sec": 1325.7303712368011,
+      "total": -0.03659736287593841,
+      "task": 0.02019269078850746,
+      "concept": 0.04456683122187853,
+      "content_pair": 0.01083873046875,
+      "sparsity": -1.6248222859382628,
+      "lr": 9.045084971874738e-05,
+      "mean_acc": 0.995,
+      "mean_auc": 0.999332,
+      "eval": [
+        {
+          "name": "Stable_Diffusion_v1.4",
+          "n": 2000,
+          "acc": 0.995,
+          "auc": 0.999332,
+          "real_acc": 0.992,
+          "fake_acc": 0.998
+        }
+      ]
+    },
+    {
+      "epoch": 6,
+      "time_sec": 1317.6025178432465,
+      "total": -0.04259758374631405,
+      "task": 0.016718621904999016,
+      "concept": 0.04087916783124208,
+      "content_pair": 0.00944078125,
+      "sparsity": -1.632883145275116,
+      "lr": 8.535533905932738e-05,
+      "mean_acc": 0.995,
+      "mean_auc": 0.9986389999999999,
+      "eval": [
+        {
+          "name": "Stable_Diffusion_v1.4",
+          "n": 2000,
+          "acc": 0.995,
+          "auc": 0.9986389999999999,
+          "real_acc": 0.995,
+          "fake_acc": 0.995
+        }
+      ]
+    },
+    {
+      "epoch": 7,
+      "time_sec": 1338.6199724674225,
+      "total": -0.046081148415207863,
+      "task": 0.014648487904258073,
+      "concept": 0.03850556135714054,
+      "content_pair": 0.01019583984375,
+      "sparsity": -1.6404313182067871,
+      "lr": 7.938926261462366e-05,
+      "mean_acc": 0.998,
+      "mean_auc": 0.999976,
+      "eval": [
+        {
+          "name": "Stable_Diffusion_v1.4",
+          "n": 2000,
+          "acc": 0.998,
+          "auc": 0.999976,
+          "real_acc": 0.997,
+          "fake_acc": 0.999
+        }
+      ]
+    },
+    {
+      "epoch": 8,
+      "time_sec": 1327.5709216594696,
+      "total": -0.04949597716808319,
+      "task": 0.012474084426388145,
+      "concept": 0.0365722405821085,
+      "content_pair": 0.0099697607421875,
+      "sparsity": -1.6450048331069946,
+      "lr": 7.269952498697734e-05,
+      "mean_acc": 0.997,
+      "mean_auc": 0.9999629999999999,
+      "eval": [
+        {
+          "name": "Stable_Diffusion_v1.4",
+          "n": 2000,
+          "acc": 0.997,
+          "auc": 0.9999629999999999,
+          "real_acc": 0.996,
+          "fake_acc": 0.998
+        }
+      ]
+    },
+    {
+      "epoch": 9,
+      "time_sec": 1311.2753055095673,
+      "total": -0.052365024650096896,
+      "task": 0.0105512331193313,
+      "concept": 0.03521907030254602,
+      "content_pair": 0.009536572265625,
+      "sparsity": -1.6486603593635558,
+      "lr": 6.545084971874738e-05,
+      "mean_acc": 0.9965,
+      "mean_auc": 0.999856,
+      "eval": [
+        {
+          "name": "Stable_Diffusion_v1.4",
+          "n": 2000,
+          "acc": 0.9965,
+          "auc": 0.999856,
+          "real_acc": 0.994,
+          "fake_acc": 0.999
+        }
+      ]
+    },
+    {
+      "epoch": 10,
+      "time_sec": 1614.8571858406067,
+      "total": -0.055064683399796484,
+      "task": 0.008640692644789815,
+      "concept": 0.03391944195866585,
+      "content_pair": 0.009436376953125,
+      "sparsity": -1.6510466381645204,
+      "lr": 5.782172325201156e-05,
+      "mean_acc": 0.997,
+      "mean_auc": 0.999954,
+      "eval": [
+        {
+          "name": "Stable_Diffusion_v1.4",
+          "n": 2000,
+          "acc": 0.997,
+          "auc": 0.999954,
+          "real_acc": 0.996,
+          "fake_acc": 0.998
+        }
+      ]
+    },
+    {
+      "epoch": 11,
+      "time_sec": 2756.0013706684113,
+      "total": -0.05706432340145111,
+      "task": 0.007131502869427204,
+      "concept": 0.0329071694535017,
+      "content_pair": 0.0101321484375,
+      "sparsity": -1.6535163633918761,
+      "lr": 5.000000000000001e-05,
+      "mean_acc": 0.9995,
+      "mean_auc": 0.999982,
+      "eval": [
+        {
+          "name": "Stable_Diffusion_v1.4",
+          "n": 2000,
+          "acc": 0.9995,
+          "auc": 0.999982,
+          "real_acc": 0.999,
+          "fake_acc": 1.0
+        }
+      ]
+    },
+    {
+      "epoch": 12,
+      "time_sec": 2698.7896835803986,
+      "total": -0.058567456194758415,
+      "task": 0.006188481675572693,
+      "concept": 0.032010518903434274,
+      "content_pair": 0.01018416015625,
+      "sparsity": -1.6559585856056214,
+      "lr": 4.217827674798848e-05,
+      "mean_acc": 0.9935,
+      "mean_auc": 0.997175,
+      "eval": [
+        {
+          "name": "Stable_Diffusion_v1.4",
+          "n": 2000,
+          "acc": 0.9935,
+          "auc": 0.997175,
+          "real_acc": 1.0,
+          "fake_acc": 0.987
+        }
+      ]
+    },
+    {
+      "epoch": 13,
+      "time_sec": 2685.571517467499,
+      "total": -0.06007569042801857,
+      "task": 0.005316193596143276,
+      "concept": 0.03101648601204157,
+      "content_pair": 0.0096469140625,
+      "sparsity": -1.6565911812210083,
+      "lr": 3.454915028125264e-05,
+      "mean_acc": 0.998,
+      "mean_auc": 0.999994,
+      "eval": [
+        {
+          "name": "Stable_Diffusion_v1.4",
+          "n": 2000,
+          "acc": 0.998,
+          "auc": 0.999994,
+          "real_acc": 0.998,
+          "fake_acc": 0.998
+        }
+      ]
+    },
+    {
+      "epoch": 14,
+      "time_sec": 1923.5268869400024,
+      "total": -0.061105632357597355,
+      "task": 0.004609616897348314,
+      "concept": 0.030359169137775897,
+      "content_pair": 0.0100222265625,
+      "sparsity": -1.657986881389618,
+      "lr": 2.730047501302267e-05,
+      "mean_acc": 0.9985,
+      "mean_auc": 0.999999,
+      "eval": [
+        {
+          "name": "Stable_Diffusion_v1.4",
+          "n": 2000,
+          "acc": 0.9985,
+          "auc": 0.999999,
+          "real_acc": 0.997,
+          "fake_acc": 1.0
+        }
+      ]
+    },
+    {
+      "epoch": 15,
+      "time_sec": 1806.8847432136536,
+      "total": -0.062030050575137136,
+      "task": 0.003911993386186659,
+      "concept": 0.029854653120934962,
+      "content_pair": 0.010543017578125,
+      "sparsity": -1.6595621604156494,
+      "lr": 2.0610737385376356e-05,
+      "mean_acc": 0.9995,
+      "mean_auc": 0.999999,
+      "eval": [
+        {
+          "name": "Stable_Diffusion_v1.4",
+          "n": 2000,
+          "acc": 0.9995,
+          "auc": 0.999999,
+          "real_acc": 1.0,
+          "fake_acc": 0.999
+        }
+      ]
+    },
+    {
+      "epoch": 16,
+      "time_sec": 1794.517929315567,
+      "total": -0.06302997139394283,
+      "task": 0.0032846115445159378,
+      "concept": 0.02937113668307662,
+      "content_pair": 0.009990078125,
+      "sparsity": -1.65996417760849,
+      "lr": 1.464466094067263e-05,
+      "mean_acc": 0.9995,
+      "mean_auc": 1.0,
+      "eval": [
+        {
+          "name": "Stable_Diffusion_v1.4",
+          "n": 2000,
+          "acc": 0.9995,
+          "auc": 1.0,
+          "real_acc": 0.999,
+          "fake_acc": 1.0
+        }
+      ]
+    },
+    {
+      "epoch": 17,
+      "time_sec": 1669.102900505066,
+      "total": -0.0635363661789894,
+      "task": 0.0029870099763199686,
+      "concept": 0.028927105213552712,
+      "content_pair": 0.01020931640625,
+      "sparsity": -1.6605701364135743,
+      "lr": 9.549150281252635e-06,
+      "mean_acc": 1.0,
+      "mean_auc": 1.0,
+      "eval": [
+        {
+          "name": "Stable_Diffusion_v1.4",
+          "n": 2000,
+          "acc": 1.0,
+          "auc": 1.0,
+          "real_acc": 1.0,
+          "fake_acc": 1.0
+        }
+      ]
+    },
+    {
+      "epoch": 18,
+      "time_sec": 2989.597631931305,
+      "total": -0.06406172161281108,
+      "task": 0.00277125036848709,
+      "concept": 0.028561839358210564,
+      "content_pair": 0.00953951171875,
+      "sparsity": -1.66043297996521,
+      "lr": 5.4496737905816115e-06,
+      "mean_acc": 1.0,
+      "mean_auc": 1.0,
+      "eval": [
+        {
+          "name": "Stable_Diffusion_v1.4",
+          "n": 2000,
+          "acc": 1.0,
+          "auc": 1.0,
+          "real_acc": 1.0,
+          "fake_acc": 1.0
+        }
+      ]
+    },
+    {
+      "epoch": 19,
+      "time_sec": 2762.4069743156433,
+      "total": -0.06390216702580452,
+      "task": 0.0026964125816896557,
+      "concept": 0.028427101303339003,
+      "content_pair": 0.011171796875,
+      "sparsity": -1.660922799243927,
+      "lr": 2.4471741852423237e-06,
+      "mean_acc": 1.0,
+      "mean_auc": 1.0,
+      "eval": [
+        {
+          "name": "Stable_Diffusion_v1.4",
+          "n": 2000,
+          "acc": 1.0,
+          "auc": 1.0,
+          "real_acc": 1.0,
+          "fake_acc": 1.0
+        }
+      ]
+    },
+    {
+      "epoch": 20,
+      "time_sec": 2718.622219800949,
+      "total": -0.06416634597182273,
+      "task": 0.0025946170388534665,
+      "concept": 0.02851426312327385,
+      "content_pair": 0.01037923828125,
+      "sparsity": -1.6618733360481261,
+      "lr": 6.155829702431171e-07,
+      "mean_acc": 1.0,
+      "mean_auc": 1.0,
+      "eval": [
+        {
+          "name": "Stable_Diffusion_v1.4",
+          "n": 2000,
+          "acc": 1.0,
+          "auc": 1.0,
+          "real_acc": 1.0,
+          "fake_acc": 1.0
+        }
+      ]
+    }
+  ]
+}

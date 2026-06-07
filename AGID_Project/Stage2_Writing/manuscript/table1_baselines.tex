@@ -1,0 +1,40 @@
+% Table 1 --- baseline master-table (FIX-5). Built from E1_sota_baselines.md.
+% NOT a leaderboard: every row carries a training-protocol tag (P1/P2/P4) and a comparability flag.
+\begin{table}[t]
+  \centering
+  \caption{GenImage cross-generator detection, in context. \textbf{The numbers are not head-to-head.}
+  Each row is tagged with its training \emph{protocol} and a \emph{comparability} flag. Baseline means are
+  literature-reported or uniformly re-implemented values under the single-generator protocol \textbf{P1}
+  (train on SD-v1.4, test on the remaining generators); \textsc{lota} uses \textbf{P2} (per-generator training
+  averaged over all eight sources, which \emph{includes} in-distribution diagonal cells and inflates the mean).
+  CBNet-AGID uses \textbf{P4} (joint training on four generators), so its held-out set
+  (GLIDE/Wukong/VQDM/SD-v1.5) is narrower than the baselines' cross-generator set --- the comparison is
+  therefore indicative, not a ranking. Baseline values from \citet{zhu2023genimage} and uniform
+  re-implementations (AIDE; IAPL~2025); see text.}
+  \label{tab:baselines}
+  \small
+  \begin{tabular}{llcc}
+    \toprule
+    Method & Venue & Protocol (comparability) & GenImage cross-gen acc (\%) \\
+    \midrule
+    CNNSpot \citep{wang2020cnngenerated} & CVPR 2020 & P1 (re-impl.) & 64.2 \\
+    UnivFD \citep{ojha2023universal}     & CVPR 2023 & P1 (re-impl.) & 79.5 \\
+    AIDE \citep{yan2024aide}             & arXiv 2024 & P1 (reported) & 86.9 \\
+    NPR \citep{tan2024npr}               & CVPR 2024  & P1 (re-impl.) & 88.6 \\
+    DRCT \citep{chen2024drct}            & ICML 2024  & P1 (re-impl.) & 89.5 \\
+    C2P-CLIP \citep{tan2024c2pclip}      & arXiv 2024 & P1 (re-impl.) & 95.8 \\
+    LOTA \citep{wang2025lota}            & ICCV 2025 & P2 (not comparable$^{\dagger}$) & 98.9 \\
+    \midrule
+    \textbf{CBNet-AGID (ours)}, in-distribution & --- & P4 (ours) & $\geq$\,99.85 \\
+    \textbf{CBNet-AGID (ours)}, held-out OOD     & --- & P4 (ours) & 99.67$^{\ddagger}$ \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{3pt}
+  {\footnotesize $^{\dagger}$\,LOTA's 98.9\% is a \textbf{P2} mean (per-generator models averaged over all eight
+  sources, \emph{including} the in-distribution diagonal) and is not directly comparable to the P1 cross-generator
+  means or to CBNet's P4 held-out number. ``re-impl.''\ marks a third-party uniform re-implementation, used
+  because the method's own paper does not report GenImage under P1.\\
+  $^{\ddagger}$\,CBNet's held-out OOD mean is stable across three random seeds
+  (99.67 / 99.73 / 99.82; see \S{}4.2).}
+\end{table}

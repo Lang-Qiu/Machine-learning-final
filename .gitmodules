@@ -1,0 +1,7 @@
+[submodule "AGID_Project/Code/external/LOTA"]
+	path = AGID_Project/Code/external/LOTA
+	url = https://github.com/hongsong-wang/LOTA.git
+
+[submodule "AGID_Project/Code/external/NPR-DeepfakeDetection"]
+	path = AGID_Project/Code/external/NPR-DeepfakeDetection
+	url = https://github.com/chuangchuangtan/NPR-DeepfakeDetection.git

@@ -1,0 +1,798 @@
+{
+  "config": {
+    "root": "../Data/GenImage_debiased_full",
+    "generators": [
+      "Stable_Diffusion_v1.4",
+      "BigGAN",
+      "ADM",
+      "Midjourney"
+    ],
+    "split": "train_25k",
+    "use_shared_concept_labels": true,
+    "val_generators": "all",
+    "max_train_samples": null,
+    "max_val_samples": null,
+    "n_concepts": 6,
+    "pretrained": true,
+    "signal_channels": 512,
+    "epochs": 10,
+    "batch_size": 32,
+    "accum_steps": 2,
+    "lr_backbone": 0.0001,
+    "lr_head": 0.0005,
+    "lr_classifier": 0.001,
+    "weight_decay": 0.0001,
+    "lambda_concept": 0.5,
+    "lambda_pair": 0.2,
+    "lambda_sparsity": 0.05,
+    "amp": true,
+    "image_size": 256,
+    "num_workers": 2,
+    "disable_destructive_aug": true,
+    "out_dir": "Logs/edelta_full",
+    "ckpt_every": 1,
+    "eval_every": 1,
+    "seed": 42
+  },
+  "final_eval": {
+    "BigGAN": {
+      "name": "BigGAN",
+      "n": 2000,
+      "acc": 0.9985,
+      "auc": 1.0,
+      "real_acc": 0.997,
+      "fake_acc": 1.0
+    },
+    "Midjourney": {
+      "name": "Midjourney",
+      "n": 2000,
+      "acc": 0.9955,
+      "auc": 0.999432,
+      "real_acc": 0.998,
+      "fake_acc": 0.993
+    },
+    "Wukong": {
+      "name": "Wukong",
+      "n": 1000,
+      "acc": 0.997,
+      "auc": NaN,
+      "real_acc": NaN,
+      "fake_acc": 0.997
+    },
+    "Stable_Diffusion_v1.4": {
+      "name": "Stable_Diffusion_v1.4",
+      "n": 2000,
+      "acc": 0.996,
+      "auc": 0.9991019999999999,
+      "real_acc": 0.994,
+      "fake_acc": 0.998
+    },
+    "Stable_Diffusion_v1.5": null,
+    "ADM": {
+      "name": "ADM",
+      "n": 2000,
+      "acc": 0.997,
+      "auc": 0.999975,
+      "real_acc": 0.994,
+      "fake_acc": 1.0
+    },
+    "GLIDE": {
+      "name": "GLIDE",
+      "n": 1000,
+      "acc": 0.984,
+      "auc": NaN,
+      "real_acc": NaN,
+      "fake_acc": 0.984
+    },
+    "VQDM": {
+      "name": "VQDM",
+      "n": 1000,
+      "acc": 0.858,
+      "auc": NaN,
+      "real_acc": NaN,
+      "fake_acc": 0.858
+    }
+  },
+  "history": [
+    {
+      "epoch": 1,
+      "time_sec": 1253.9471681118011,
+      "total": 0.19449000699980046,
+      "task": 0.19790898975247784,
+      "concept": 0.12336933160530679,
+      "content_pair": 0.014811940222935669,
+      "sparsity": -1.3613277861052921,
+      "lr": 0.0001,
+      "mean_acc": 0.9355000000000001,
+      "mean_auc": 0.99867675,
+      "eval": [
+        {
+          "name": "BigGAN",
+          "n": 2000,
+          "acc": 0.995,
+          "auc": 0.999979,
+          "real_acc": 0.991,
+          "fake_acc": 0.999
+        },
+        {
+          "name": "Midjourney",
+          "n": 2000,
+          "acc": 0.9605,
+          "auc": 0.9963470000000001,
+          "real_acc": 0.996,
+          "fake_acc": 0.925
+        },
+        {
+          "name": "Wukong",
+          "n": 1000,
+          "acc": 0.896,
+          "auc": NaN,
+          "real_acc": NaN,
+          "fake_acc": 0.896
+        },
+        {
+          "name": "Stable_Diffusion_v1.4",
+          "n": 2000,
+          "acc": 0.9795,
+          "auc": 0.998433,
+          "real_acc": 0.995,
+          "fake_acc": 0.964
+        },
+        {
+          "name": "ADM",
+          "n": 2000,
+          "acc": 0.9975,
+          "auc": 0.999948,
+          "real_acc": 0.996,
+          "fake_acc": 0.999
+        },
+        {
+          "name": "GLIDE",
+          "n": 1000,
+          "acc": 0.953,
+          "auc": NaN,
+          "real_acc": NaN,
+          "fake_acc": 0.953
+        },
+        {
+          "name": "VQDM",
+          "n": 1000,
+          "acc": 0.767,
+          "auc": NaN,
+          "real_acc": NaN,
+          "fake_acc": 0.767
+        }
+      ]
+    },
+    {
+      "epoch": 2,
+      "time_sec": 1251.7392938137054,
+      "total": 0.03084797955480723,
+      "task": 0.060995448530042226,
+      "concept": 0.08281537664377284,
+      "content_pair": 0.012497214398053689,
+      "sparsity": -1.4810993009079818,
+      "lr": 9.755282581475769e-05,
+      "mean_acc": 0.9582857142857143,
+      "mean_auc": 0.99845425,
+      "eval": [
+        {
+          "name": "BigGAN",
+          "n": 2000,
+          "acc": 0.987,
+          "auc": 0.999374,
+          "real_acc": 0.979,
+          "fake_acc": 0.995
+        },
+        {
+          "name": "Midjourney",
+          "n": 2000,
+          "acc": 0.974,
+          "auc": 0.99666,
+          "real_acc": 0.971,
+          "fake_acc": 0.977
+        },
+        {
+          "name": "Wukong",
+          "n": 1000,
+          "acc": 0.997,
+          "auc": NaN,
+          "real_acc": NaN,
+          "fake_acc": 0.997
+        },
+        {
+          "name": "Stable_Diffusion_v1.4",
+          "n": 2000,
+          "acc": 0.979,
+          "auc": 0.998141,
+          "real_acc": 0.965,
+          "fake_acc": 0.993
+        },
+        {
+          "name": "ADM",
+          "n": 2000,
+          "acc": 0.988,
+          "auc": 0.9996419999999999,
+          "real_acc": 0.978,
+          "fake_acc": 0.998
+        },
+        {
+          "name": "GLIDE",
+          "n": 1000,
+          "acc": 0.963,
+          "auc": NaN,
+          "real_acc": NaN,
+          "fake_acc": 0.963
+        },
+        {
+          "name": "VQDM",
+          "n": 1000,
+          "acc": 0.82,
+          "auc": NaN,
+          "real_acc": NaN,
+          "fake_acc": 0.82
+        }
+      ]
+    },
+    {
+      "epoch": 3,
+      "time_sec": 1184.0431025028229,
+      "total": -0.005924723543444907,
+      "task": 0.039003679008102546,
+      "concept": 0.060638461157066725,
+      "content_pair": 0.011609630978456553,
+      "sparsity": -1.5513894579318603,
+      "lr": 9.045084971874737e-05,
+      "mean_acc": 0.958,
+      "mean_auc": 0.9987215,
+      "eval": [
+        {
+          "name": "BigGAN",
+          "n": 2000,
+          "acc": 0.9915,
+          "auc": 0.999854,
+          "real_acc": 0.983,
+          "fake_acc": 1.0
+        },
+        {
+          "name": "Midjourney",
+          "n": 2000,
+          "acc": 0.983,
+          "auc": 0.9987710000000001,
+          "real_acc": 0.985,
+          "fake_acc": 0.981
+        },
+        {
+          "name": "Wukong",
+          "n": 1000,
+          "acc": 0.955,
+          "auc": NaN,
+          "real_acc": NaN,
+          "fake_acc": 0.955
+        },
+        {
+          "name": "Stable_Diffusion_v1.4",
+          "n": 2000,
+          "acc": 0.9875,
+          "auc": 0.998017,
+          "real_acc": 0.985,
+          "fake_acc": 0.99
+        },
+        {
+          "name": "ADM",
+          "n": 2000,
+          "acc": 0.994,
+          "auc": 0.998244,
+          "real_acc": 0.988,
+          "fake_acc": 1.0
+        },
+        {
+          "name": "GLIDE",
+          "n": 1000,
+          "acc": 0.986,
+          "auc": NaN,
+          "real_acc": NaN,
+          "fake_acc": 0.986
+        },
+        {
+          "name": "VQDM",
+          "n": 1000,
+          "acc": 0.809,
+          "auc": NaN,
+          "real_acc": NaN,
+          "fake_acc": 0.809
+        }
+      ]
+    },
+    {
+      "epoch": 4,
+      "time_sec": 1131.604662656784,
+      "total": -0.023320063090783192,
+      "task": 0.02837245866865251,
+      "concept": 0.050748481655010204,
+      "content_pair": 0.011719257893763001,
+      "sparsity": -1.5882113740661274,
+      "lr": 7.938926261462366e-05,
+      "mean_acc": 0.9353571428571428,
+      "mean_auc": 0.99875525,
+      "eval": [
+        {
+          "name": "BigGAN",
+          "n": 2000,
+          "acc": 0.997,
+          "auc": 0.999992,
+          "real_acc": 0.995,
+          "fake_acc": 0.999
+        },
+        {
+          "name": "Midjourney",
+          "n": 2000,
+          "acc": 0.974,
+          "auc": 0.9967680000000001,
+          "real_acc": 0.993,
+          "fake_acc": 0.955
+        },
+        {
+          "name": "Wukong",
+          "n": 1000,
+          "acc": 0.986,
+          "auc": NaN,
+          "real_acc": NaN,
+          "fake_acc": 0.986
+        },
+        {
+          "name": "Stable_Diffusion_v1.4",
+          "n": 2000,
+          "acc": 0.987,
+          "auc": 0.998853,
+          "real_acc": 0.994,
+          "fake_acc": 0.98
+        },
+        {
+          "name": "ADM",
+          "n": 2000,
+          "acc": 0.9975,
+          "auc": 0.999408,
+          "real_acc": 0.995,
+          "fake_acc": 1.0
+        },
+        {
+          "name": "GLIDE",
+          "n": 1000,
+          "acc": 0.936,
+          "auc": NaN,
+          "real_acc": NaN,
+          "fake_acc": 0.936
+        },
+        {
+          "name": "VQDM",
+          "n": 1000,
+          "acc": 0.67,
+          "auc": NaN,
+          "real_acc": NaN,
+          "fake_acc": 0.67
+        }
+      ]
+    },
+    {
+      "epoch": 5,
+      "time_sec": 1407.9453902244568,
+      "total": -0.03396270284272705,
+      "task": 0.021649621547107235,
+      "concept": 0.04524627196767804,
+      "content_pair": 0.010780084188470155,
+      "sparsity": -1.6078357067198195,
+      "lr": 6.545084971874737e-05,
+      "mean_acc": 0.9595714285714286,
+      "mean_auc": 0.99955825,
+      "eval": [
+        {
+          "name": "BigGAN",
+          "n": 2000,
+          "acc": 0.9975,
+          "auc": 0.999993,
+          "real_acc": 0.996,
+          "fake_acc": 0.999
+        },
+        {
+          "name": "Midjourney",
+          "n": 2000,
+          "acc": 0.99,
+          "auc": 0.999592,
+          "real_acc": 0.997,
+          "fake_acc": 0.983
+        },
+        {
+          "name": "Wukong",
+          "n": 1000,
+          "acc": 0.973,
+          "auc": NaN,
+          "real_acc": NaN,
+          "fake_acc": 0.973
+        },
+        {
+          "name": "Stable_Diffusion_v1.4",
+          "n": 2000,
+          "acc": 0.993,
+          "auc": 0.998667,
+          "real_acc": 0.996,
+          "fake_acc": 0.99
+        },
+        {
+          "name": "ADM",
+          "n": 2000,
+          "acc": 0.9975,
+          "auc": 0.999981,
+          "real_acc": 0.995,
+          "fake_acc": 1.0
+        },
+        {
+          "name": "GLIDE",
+          "n": 1000,
+          "acc": 0.899,
+          "auc": NaN,
+          "real_acc": NaN,
+          "fake_acc": 0.899
+        },
+        {
+          "name": "VQDM",
+          "n": 1000,
+          "acc": 0.867,
+          "auc": NaN,
+          "real_acc": NaN,
+          "fake_acc": 0.867
+        }
+      ]
+    },
+    {
+      "epoch": 6,
+      "time_sec": 1570.222329378128,
+      "total": -0.042300085151580874,
+      "task": 0.015416566703163336,
+      "concept": 0.04196054347611786,
+      "content_pair": 0.01103047581363018,
+      "sparsity": -1.6180571222862332,
+      "lr": 4.9999999999999996e-05,
+      "mean_acc": 0.9805714285714286,
+      "mean_auc": 0.9995397500000001,
+      "eval": [
+        {
+          "name": "BigGAN",
+          "n": 2000,
+          "acc": 0.9975,
+          "auc": 1.0,
+          "real_acc": 0.995,
+          "fake_acc": 1.0
+        },
+        {
+          "name": "Midjourney",
+          "n": 2000,
+          "acc": 0.988,
+          "auc": 0.9996349999999999,
+          "real_acc": 0.998,
+          "fake_acc": 0.978
+        },
+        {
+          "name": "Wukong",
+          "n": 1000,
+          "acc": 0.99,
+          "auc": NaN,
+          "real_acc": NaN,
+          "fake_acc": 0.99
+        },
+        {
+          "name": "Stable_Diffusion_v1.4",
+          "n": 2000,
+          "acc": 0.993,
+          "auc": 0.999543,
+          "real_acc": 0.995,
+          "fake_acc": 0.991
+        },
+        {
+          "name": "ADM",
+          "n": 2000,
+          "acc": 0.9965,
+          "auc": 0.998981,
+          "real_acc": 0.993,
+          "fake_acc": 1.0
+        },
+        {
+          "name": "GLIDE",
+          "n": 1000,
+          "acc": 0.996,
+          "auc": NaN,
+          "real_acc": NaN,
+          "fake_acc": 0.996
+        },
+        {
+          "name": "VQDM",
+          "n": 1000,
+          "acc": 0.903,
+          "auc": NaN,
+          "real_acc": NaN,
+          "fake_acc": 0.903
+        }
+      ]
+    },
+    {
+      "epoch": 7,
+      "time_sec": 1414.8229851722717,
+      "total": -0.04777825461778951,
+      "task": 0.011441406044467585,
+      "concept": 0.03974595778930386,
+      "content_pair": 0.010782623657285165,
+      "sparsity": -1.6249885701011477,
+      "lr": 3.454915028125263e-05,
+      "mean_acc": 0.988857142857143,
+      "mean_auc": 0.9996729999999999,
+      "eval": [
+        {
+          "name": "BigGAN",
+          "n": 2000,
+          "acc": 0.997,
+          "auc": 0.999987,
+          "real_acc": 0.995,
+          "fake_acc": 0.999
+        },
+        {
+          "name": "Midjourney",
+          "n": 2000,
+          "acc": 0.9925,
+          "auc": 0.999548,
+          "real_acc": 0.993,
+          "fake_acc": 0.992
+        },
+        {
+          "name": "Wukong",
+          "n": 1000,
+          "acc": 0.998,
+          "auc": NaN,
+          "real_acc": NaN,
+          "fake_acc": 0.998
+        },
+        {
+          "name": "Stable_Diffusion_v1.4",
+          "n": 2000,
+          "acc": 0.995,
+          "auc": 0.9991639999999999,
+          "real_acc": 0.992,
+          "fake_acc": 0.998
+        },
+        {
+          "name": "ADM",
+          "n": 2000,
+          "acc": 0.9975,
+          "auc": 0.999993,
+          "real_acc": 0.995,
+          "fake_acc": 1.0
+        },
+        {
+          "name": "GLIDE",
+          "n": 1000,
+          "acc": 0.995,
+          "auc": NaN,
+          "real_acc": NaN,
+          "fake_acc": 0.995
+        },
+        {
+          "name": "VQDM",
+          "n": 1000,
+          "acc": 0.947,
+          "auc": NaN,
+          "real_acc": NaN,
+          "fake_acc": 0.947
+        }
+      ]
+    },
+    {
+      "epoch": 8,
+      "time_sec": 1400.6030583381653,
+      "total": -0.05144278006322633,
+      "task": 0.00876555106681449,
+      "concept": 0.03821289638863037,
+      "content_pair": 0.010730838027834453,
+      "sparsity": -1.6292198068295543,
+      "lr": 2.0610737385376345e-05,
+      "mean_acc": 0.9428571428571428,
+      "mean_auc": 0.99968275,
+      "eval": [
+        {
+          "name": "BigGAN",
+          "n": 2000,
+          "acc": 0.9985,
+          "auc": 1.0,
+          "real_acc": 0.997,
+          "fake_acc": 1.0
+        },
+        {
+          "name": "Midjourney",
+          "n": 2000,
+          "acc": 0.9945,
+          "auc": 0.999903,
+          "real_acc": 0.996,
+          "fake_acc": 0.993
+        },
+        {
+          "name": "Wukong",
+          "n": 1000,
+          "acc": 0.993,
+          "auc": NaN,
+          "real_acc": NaN,
+          "fake_acc": 0.993
+        },
+        {
+          "name": "Stable_Diffusion_v1.4",
+          "n": 2000,
+          "acc": 0.9965,
+          "auc": 0.999794,
+          "real_acc": 0.995,
+          "fake_acc": 0.998
+        },
+        {
+          "name": "ADM",
+          "n": 2000,
+          "acc": 0.9965,
+          "auc": 0.999034,
+          "real_acc": 0.994,
+          "fake_acc": 0.999
+        },
+        {
+          "name": "GLIDE",
+          "n": 1000,
+          "acc": 0.975,
+          "auc": NaN,
+          "real_acc": NaN,
+          "fake_acc": 0.975
+        },
+        {
+          "name": "VQDM",
+          "n": 1000,
+          "acc": 0.646,
+          "auc": NaN,
+          "real_acc": NaN,
+          "fake_acc": 0.646
+        }
+      ]
+    },
+    {
+      "epoch": 9,
+      "time_sec": 1401.4001302719116,
+      "total": -0.053940919279017285,
+      "task": 0.006832131863531315,
+      "concept": 0.0372197726223684,
+      "content_pair": 0.010924540895293247,
+      "sparsity": -1.6313635635269148,
+      "lr": 9.549150281252631e-06,
+      "mean_acc": 0.9738571428571429,
+      "mean_auc": 0.999856,
+      "eval": [
+        {
+          "name": "BigGAN",
+          "n": 2000,
+          "acc": 0.998,
+          "auc": 1.0,
+          "real_acc": 0.996,
+          "fake_acc": 1.0
+        },
+        {
+          "name": "Midjourney",
+          "n": 2000,
+          "acc": 0.994,
+          "auc": 0.999935,
+          "real_acc": 0.998,
+          "fake_acc": 0.99
+        },
+        {
+          "name": "Wukong",
+          "n": 1000,
+          "acc": 0.996,
+          "auc": NaN,
+          "real_acc": NaN,
+          "fake_acc": 0.996
+        },
+        {
+          "name": "Stable_Diffusion_v1.4",
+          "n": 2000,
+          "acc": 0.996,
+          "auc": 0.9996389999999999,
+          "real_acc": 0.994,
+          "fake_acc": 0.998
+        },
+        {
+          "name": "ADM",
+          "n": 2000,
+          "acc": 0.997,
+          "auc": 0.99985,
+          "real_acc": 0.994,
+          "fake_acc": 1.0
+        },
+        {
+          "name": "GLIDE",
+          "n": 1000,
+          "acc": 0.982,
+          "auc": NaN,
+          "real_acc": NaN,
+          "fake_acc": 0.982
+        },
+        {
+          "name": "VQDM",
+          "n": 1000,
+          "acc": 0.854,
+          "auc": NaN,
+          "real_acc": NaN,
+          "fake_acc": 0.854
+        }
+      ]
+    },
+    {
+      "epoch": 10,
+      "time_sec": 1470.7121455669403,
+      "total": -0.05494070306818549,
+      "task": 0.006205866216363111,
+      "concept": 0.036655334187655146,
+      "content_pair": 0.010752501650264042,
+      "sparsity": -1.6324986112386746,
+      "lr": 2.447174185242323e-06,
+      "mean_acc": 0.9751428571428571,
+      "mean_auc": 0.9996272500000001,
+      "eval": [
+        {
+          "name": "BigGAN",
+          "n": 2000,
+          "acc": 0.9985,
+          "auc": 1.0,
+          "real_acc": 0.997,
+          "fake_acc": 1.0
+        },
+        {
+          "name": "Midjourney",
+          "n": 2000,
+          "acc": 0.9955,
+          "auc": 0.999432,
+          "real_acc": 0.998,
+          "fake_acc": 0.993
+        },
+        {
+          "name": "Wukong",
+          "n": 1000,
+          "acc": 0.997,
+          "auc": NaN,
+          "real_acc": NaN,
+          "fake_acc": 0.997
+        },
+        {
+          "name": "Stable_Diffusion_v1.4",
+          "n": 2000,
+          "acc": 0.996,
+          "auc": 0.9991019999999999,
+          "real_acc": 0.994,
+          "fake_acc": 0.998
+        },
+        {
+          "name": "ADM",
+          "n": 2000,
+          "acc": 0.997,
+          "auc": 0.999975,
+          "real_acc": 0.994,
+          "fake_acc": 1.0
+        },
+        {
+          "name": "GLIDE",
+          "n": 1000,
+          "acc": 0.984,
+          "auc": NaN,
+          "real_acc": NaN,
+          "fake_acc": 0.984
+        },
+        {
+          "name": "VQDM",
+          "n": 1000,
+          "acc": 0.858,
+          "auc": NaN,
+          "real_acc": NaN,
+          "fake_acc": 0.858
+        }
+      ]
+    }
+  ]
+}

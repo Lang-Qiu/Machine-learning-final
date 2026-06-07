@@ -1,0 +1,109 @@
+{
+  "config": {
+    "root": "E:\\LQiu\\lab_folder\\Machine_learning\\AGID_Project\\Data\\GenImage",
+    "out": "E:\\LQiu\\lab_folder\\Machine_learning\\AGID_Project\\Code\\Results\\edelta\\gate1_smoke_test.json",
+    "n_per_class": 5,
+    "center_crop": 256,
+    "q": 96,
+    "seed": 42
+  },
+  "concepts": [
+    "jpeg_quant",
+    "freq_radial",
+    "bitplane_lsb",
+    "hf_noise",
+    "texture_geometry"
+  ],
+  "pooled_cohens_d": {
+    "raw": {
+      "jpeg_quant": -1.397520657512646,
+      "freq_radial": 1.3450471316490256,
+      "bitplane_lsb": 0.8198464438805609,
+      "hf_noise": -0.4318759506258751,
+      "texture_geometry": -0.1729798559669907
+    },
+    "q96": {
+      "jpeg_quant": -1.3748147208722858,
+      "freq_radial": 1.3437632645130655,
+      "bitplane_lsb": 0.8187537777600851,
+      "hf_noise": -0.43375520317859656,
+      "texture_geometry": -0.17234040682389679
+    }
+  },
+  "per_generator_cohens_d": {
+    "Stable_Diffusion_v1.4": {
+      "raw": {
+        "jpeg_quant": -0.27431146502238274,
+        "freq_radial": 0.9509547788852649,
+        "bitplane_lsb": 0.35793493510665325,
+        "hf_noise": 0.7659949681969197,
+        "texture_geometry": -0.09360328583304228
+      },
+      "q96": {
+        "jpeg_quant": -0.2599214463316594,
+        "freq_radial": 0.951539041275226,
+        "bitplane_lsb": 0.4099753922672516,
+        "hf_noise": 0.7647722422453241,
+        "texture_geometry": -0.0896488355139308
+      }
+    },
+    "BigGAN": {
+      "raw": {
+        "jpeg_quant": -1.3260262334792323,
+        "freq_radial": 3.2815759768379307,
+        "bitplane_lsb": -0.02697171180382812,
+        "hf_noise": -1.739864372500951,
+        "texture_geometry": -0.33244372811136574
+      },
+      "q96": {
+        "jpeg_quant": -1.2906200157463155,
+        "freq_radial": 3.2923809266577773,
+        "bitplane_lsb": 0.04947107721613619,
+        "hf_noise": -1.7379139524946812,
+        "texture_geometry": -0.32849606509690404
+      }
+    },
+    "ADM": {
+      "raw": {
+        "jpeg_quant": -2.917588665861011,
+        "freq_radial": 1.5035605118630002,
+        "bitplane_lsb": 1.1977702381166042,
+        "hf_noise": -1.4753601799799916,
+        "texture_geometry": -0.015789680281714572
+      },
+      "q96": {
+        "jpeg_quant": -2.7916971932372467,
+        "freq_radial": 1.4940467971012472,
+        "bitplane_lsb": 1.1523426024135106,
+        "hf_noise": -1.4673808353518127,
+        "texture_geometry": -0.015301942016227667
+      }
+    },
+    "Midjourney": {
+      "raw": {
+        "jpeg_quant": -2.6853963977643964,
+        "freq_radial": 0.7251341923476528,
+        "bitplane_lsb": 1.7392517315213931,
+        "hf_noise": -0.9756243156119293,
+        "texture_geometry": -0.41009574710047414
+      },
+      "q96": {
+        "jpeg_quant": -2.6958809215308124,
+        "freq_radial": 0.737284292520162,
+        "bitplane_lsb": 1.6877670557477082,
+        "hf_noise": -0.9944544141401835,
+        "texture_geometry": -0.4146916437422922
+      }
+    }
+  },
+  "hdelta1": {
+    "jpeg_quant_d_raw": -1.397520657512646,
+    "jpeg_quant_d_q96": -1.3748147208722858,
+    "threshold": 0.3,
+    "verdict": "FAIL"
+  },
+  "outcome_b_preview_survivors_q96": {
+    "freq_radial": 1.3437632645130655,
+    "bitplane_lsb": 0.8187537777600851
+  }
+}

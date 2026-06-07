@@ -1,0 +1,21 @@
+% Table 2 --- detection results (Route B). Numbers from F3_main_results.md.
+\begin{table}[t]
+  \centering
+  \caption{CBNet-AGID (Route B) detection across four evaluation tiers of increasing distribution shift.
+  Per-class real- and fake-accuracy are reported (uncommon in this literature) and prove diagnostic in the audit.}
+  \label{tab:detection}
+  \small
+  \begin{tabular}{llrcccc}
+    \toprule
+    Generator & Tier & $n$ & Acc (\%) & AUC & Real-acc (\%) & Fake-acc (\%) \\
+    \midrule
+    SD-1.4 (val) & in-dist  & 12000 & 99.88 & 0.9998 & 99.80 & 99.95 \\
+    BigGAN       & held-out & 2000  & 99.90 & 1.0000 & 99.80 & 100.0 \\
+    ADM          & held-out & 2000  & 99.95 & 0.9997 & 99.90 & 100.0 \\
+    Midjourney   & held-out & 2000  & 99.85 & 1.0000 & 99.90 & 99.80 \\
+    GLIDE        & OOD      & 2000  & 99.80 & 1.0000 & 99.60 & 100.0 \\
+    Wukong       & OOD      & 2000  & 99.45 & 0.9999 & 99.60 & 99.30 \\
+    VQDM         & OOD      & 2000  & 99.75 & 1.0000 & 99.60 & 99.90 \\
+    \bottomrule
+  \end{tabular}
+\end{table}

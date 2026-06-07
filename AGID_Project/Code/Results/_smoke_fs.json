@@ -1,0 +1,38 @@
+{
+  "method": "cbnet",
+  "ckpt": "E:\\LQiu\\lab_folder\\Machine_learning\\AGID_Project\\Logs\\cbnet_multigen_main_25k_s42\\ckpt_epoch20.pth",
+  "results": {
+    "biggan": {
+      "n": 100,
+      "acc": 0.63,
+      "auc": 0.6448,
+      "ap": 0.5722847980178791,
+      "real_acc": 0.26,
+      "fake_acc": 1.0
+    },
+    "deepfake": {
+      "n": 100,
+      "acc": 0.89,
+      "auc": 0.978,
+      "ap": 0.9859600182149363,
+      "real_acc": 0.82,
+      "fake_acc": 0.96
+    },
+    "gaugan": {
+      "n": 100,
+      "acc": 0.57,
+      "auc": 0.722,
+      "ap": 0.6374408287246163,
+      "real_acc": 0.14,
+      "fake_acc": 1.0
+    },
+    "stargan": {
+      "n": 100,
+      "acc": 0.96,
+      "auc": 0.9812,
+      "ap": 0.9512904030373333,
+      "real_acc": 0.92,
+      "fake_acc": 1.0
+    }
+  }
+}

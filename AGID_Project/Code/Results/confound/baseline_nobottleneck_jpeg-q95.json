@@ -1,0 +1,37 @@
+{
+  "variant": "jpeg-q95",
+  "model_type": "BaselinePlain",
+  "ckpt": "E:\\LQiu\\lab_folder\\Machine_learning\\AGID_Project\\Logs\\cbnet_baseline_nobottleneck_s42\\ckpt_epoch20.pth",
+  "n_per_class": 1000,
+  "seed": 0,
+  "results": {
+    "Stable_Diffusion_v1.4": {
+      "n": 2000,
+      "acc": 0.932,
+      "auc": 0.9884909999999999,
+      "real_acc": 0.999,
+      "fake_acc": 0.865
+    },
+    "BigGAN": {
+      "n": 2000,
+      "acc": 0.7765,
+      "auc": 0.9711960000000002,
+      "real_acc": 0.999,
+      "fake_acc": 0.554
+    },
+    "ADM": {
+      "n": 2000,
+      "acc": 0.8425,
+      "auc": 0.985785,
+      "real_acc": 0.996,
+      "fake_acc": 0.689
+    },
+    "Midjourney": {
+      "n": 2000,
+      "acc": 0.939,
+      "auc": 0.9949095,
+      "real_acc": 0.995,
+      "fake_acc": 0.883
+    }
+  }
+}

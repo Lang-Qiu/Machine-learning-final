@@ -1,0 +1,20 @@
+% Table 3 --- confound battery (B1/B2/B5). Numbers from B_confound_summary.md.
+\begin{table}[t]
+  \centering
+  \caption{Confound battery: change in mean accuracy ($\Delta$acc, percentage points) under controlled
+  perturbations of the image container and resolution. Closing the PNG-vs-JPEG container gap (JPEG-q95) and
+  destroying high-frequency content (res128) both degrade the detector substantially, while a pure PNG re-save
+  (control) and disjoint real-image pools do not.}
+  \label{tab:confound}
+  \small
+  \begin{tabular}{lccc}
+    \toprule
+    Perturbation & mean $\Delta$acc & train-gen & OOD \\
+    \midrule
+    JPEG-q95 (close container gap)  & $-10.16$ & $-10.83$ & $-9.28$ \\
+    PNG re-save (control)           & $+0.00$  & $+0.00$  & $+0.00$ \\
+    res128 (destroy high-freq)      & $-44.64$ & $-43.91$ & $-45.62$ \\
+    independent real pool           & ---      & ---      & $+0.12$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}

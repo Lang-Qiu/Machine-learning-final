@@ -1,0 +1,75 @@
+{
+  "variant": "independent_real",
+  "ckpt": "E:\\LQiu\\lab_folder\\Machine_learning\\AGID_Project\\Logs\\cbnet_multigen_main_25k_s42\\ckpt_epoch20.pth",
+  "n_per_class": 1000,
+  "seed": 0,
+  "results": {
+    "GLIDE": {
+      "name": "GLIDE",
+      "n": 2000,
+      "acc": 0.999,
+      "auc": 0.999999,
+      "real_acc": 0.998,
+      "fake_acc": 1.0,
+      "concept_means": {
+        "bitplane_lsb": 0.391275554895401,
+        "freq_radial": 0.4311625361442566,
+        "color_manifold": 0.5031599998474121,
+        "hf_noise": 0.2476968914270401,
+        "jpeg_quant": 0.45377111434936523,
+        "texture_geometry": 0.2957048714160919
+      }
+    },
+    "Wukong": {
+      "name": "Wukong",
+      "n": 2000,
+      "acc": 0.996,
+      "auc": 0.9999199999999999,
+      "real_acc": 0.999,
+      "fake_acc": 0.993,
+      "concept_means": {
+        "bitplane_lsb": 0.21033816039562225,
+        "freq_radial": 0.3962174654006958,
+        "color_manifold": 0.33061763644218445,
+        "hf_noise": 0.3593316674232483,
+        "jpeg_quant": 0.5271447896957397,
+        "texture_geometry": 0.4258434474468231
+      }
+    },
+    "VQDM": {
+      "name": "VQDM",
+      "n": 2000,
+      "acc": 0.9985,
+      "auc": 0.999991,
+      "real_acc": 0.998,
+      "fake_acc": 0.999,
+      "concept_means": {
+        "bitplane_lsb": 0.2100110948085785,
+        "freq_radial": 0.398255318403244,
+        "color_manifold": 0.46912580728530884,
+        "hf_noise": 0.2665775716304779,
+        "jpeg_quant": 0.4800339937210083,
+        "texture_geometry": 0.35016852617263794
+      }
+    }
+  },
+  "mean_acc": 0.9978333333333333,
+  "mean_auc": 0.9999699999999999,
+  "independent_subset_samples": {
+    "GLIDE": [
+      "E:\\LQiu\\lab_folder\\Machine_learning\\AGID_Project\\Data\\GenImage\\Stable_Diffusion_v1.4\\val\\nature\\ILSVRC2012_val_00006072.JPEG",
+      "E:\\LQiu\\lab_folder\\Machine_learning\\AGID_Project\\Data\\GenImage\\Stable_Diffusion_v1.4\\val\\nature\\ILSVRC2012_val_00006854.JPEG",
+      "E:\\LQiu\\lab_folder\\Machine_learning\\AGID_Project\\Data\\GenImage\\Stable_Diffusion_v1.4\\val\\nature\\ILSVRC2012_val_00036232.JPEG"
+    ],
+    "Wukong": [
+      "E:\\LQiu\\lab_folder\\Machine_learning\\AGID_Project\\Data\\GenImage\\Stable_Diffusion_v1.4\\val\\nature\\ILSVRC2012_val_00004691.JPEG",
+      "E:\\LQiu\\lab_folder\\Machine_learning\\AGID_Project\\Data\\GenImage\\Stable_Diffusion_v1.4\\val\\nature\\ILSVRC2012_val_00007947.JPEG",
+      "E:\\LQiu\\lab_folder\\Machine_learning\\AGID_Project\\Data\\GenImage\\Stable_Diffusion_v1.4\\val\\nature\\ILSVRC2012_val_00006994.JPEG"
+    ],
+    "VQDM": [
+      "E:\\LQiu\\lab_folder\\Machine_learning\\AGID_Project\\Data\\GenImage\\Stable_Diffusion_v1.4\\val\\nature\\ILSVRC2012_val_00048274.JPEG",
+      "E:\\LQiu\\lab_folder\\Machine_learning\\AGID_Project\\Data\\GenImage\\Stable_Diffusion_v1.4\\val\\nature\\ILSVRC2012_val_00039493.JPEG",
+      "E:\\LQiu\\lab_folder\\Machine_learning\\AGID_Project\\Data\\GenImage\\Stable_Diffusion_v1.4\\val\\nature\\ILSVRC2012_val_00037558.JPEG"
+    ]
+  }
+}

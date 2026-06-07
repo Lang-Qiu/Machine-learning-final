@@ -1,0 +1,38 @@
+{
+  "ckpt": "E:\\LQiu\\lab_folder\\Machine_learning\\AGID_Project\\Logs\\cbnet_baseline_nobottleneck_s42\\ckpt_epoch20.pth",
+  "model_type": "BaselinePlain",
+  "n_per_class": 1000,
+  "generators": [
+    "GLIDE",
+    "Wukong",
+    "VQDM"
+  ],
+  "results": {
+    "GLIDE": {
+      "name": "GLIDE",
+      "n": 2000,
+      "acc": 0.999,
+      "auc": 1.0,
+      "real_acc": 0.998,
+      "fake_acc": 1.0
+    },
+    "Wukong": {
+      "name": "Wukong",
+      "n": 2000,
+      "acc": 0.99,
+      "auc": 0.999865,
+      "real_acc": 0.998,
+      "fake_acc": 0.982
+    },
+    "VQDM": {
+      "name": "VQDM",
+      "n": 2000,
+      "acc": 0.999,
+      "auc": 0.999995,
+      "real_acc": 0.998,
+      "fake_acc": 1.0
+    }
+  },
+  "mean_acc": 0.996,
+  "mean_auc": 0.9999533333333334
+}

@@ -1,0 +1,8 @@
+step,zeroed_so_far,remaining_concepts,overall_acc
+0,none,6,0.9975
+1,jpeg_quant,5,0.5020714285714286
+2,"jpeg_quant, freq_radial",4,0.6632142857142858
+3,"jpeg_quant, freq_radial, texture_geometry",3,0.8141428571428572
+4,"jpeg_quant, freq_radial, texture_geometry, bitplane_lsb",2,0.6038571428571429
+5,"jpeg_quant, freq_radial, texture_geometry, bitplane_lsb, color_manifold",1,0.5
+6,"jpeg_quant, freq_radial, texture_geometry, bitplane_lsb, color_manifold, hf_noise",0,0.5

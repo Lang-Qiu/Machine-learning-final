@@ -1,0 +1,15 @@
+% Confound sweeps (data: batch1_analysis/B3_jpeg_quality_curve.csv, B4_resolution_curve.csv).
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{figs/fig_confound.pdf}
+  \caption{\textbf{Confound battery as full sweeps: accuracy is carried by
+    container/compression cues.} \textbf{(a)} Re-encoding every image to a decreasing JPEG
+    quality (native $\sim$95+ on the left) drives accuracy toward chance, fastest on BigGAN,
+    ADM, GLIDE, and VQDM; Stable Diffusion and Midjourney retain the most accuracy.
+    \textbf{(b)} Down-sampling to destroy high-frequency content collapses accuracy at
+    128\,px (a real-accuracy collapse) and recovers by 192\,px. Solid lines are
+    training-family generators, dashed lines are unseen OOD generators; the single
+    operating points in Table 3 are the 95-quality and 128-px slices of these curves
+    (\S{}4.3b).}
+  \label{fig:confound}
+\end{figure}

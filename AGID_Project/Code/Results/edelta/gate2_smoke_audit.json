@@ -1,0 +1,106 @@
+{
+  "ckpt": "E:\\LQiu\\lab_folder\\Machine_learning\\AGID_Project\\Logs\\cbnet_debiased_smoke\\ckpt_epoch6.pth",
+  "classifier_weight": {
+    "bitplane_lsb": 1.9003674983978271,
+    "freq_radial": 1.980179786682129,
+    "color_manifold": 2.0993573665618896,
+    "hf_noise": 1.924504280090332,
+    "jpeg_quant": -2.6147587299346924,
+    "texture_geometry": 2.05354642868042
+  },
+  "classifier_bias": -1.818840503692627,
+  "jpeg_quant_rank": 1,
+  "top_concept": "jpeg_quant",
+  "baseline": {
+    "Stable_Diffusion_v1.4": {
+      "acc": 1.0,
+      "auc": 1.0,
+      "real_acc": 1.0,
+      "fake_acc": 1.0,
+      "n": 1000
+    },
+    "BigGAN": {
+      "acc": 1.0,
+      "auc": 1.0,
+      "real_acc": 1.0,
+      "fake_acc": 1.0,
+      "n": 1000
+    },
+    "ADM": {
+      "acc": 1.0,
+      "auc": 1.0,
+      "real_acc": 1.0,
+      "fake_acc": 1.0,
+      "n": 1000
+    },
+    "Midjourney": {
+      "acc": 1.0,
+      "auc": 1.0,
+      "real_acc": 1.0,
+      "fake_acc": 1.0,
+      "n": 1000
+    }
+  },
+  "cohens_d": {
+    "Stable_Diffusion_v1.4": {
+      "bitplane_lsb": 7.656229475106482,
+      "freq_radial": 6.7232054530758445,
+      "color_manifold": 7.531545262626129,
+      "hf_noise": 3.553515519475003,
+      "jpeg_quant": -9.682703645739798,
+      "texture_geometry": 5.644171701604034
+    },
+    "BigGAN": {
+      "bitplane_lsb": 3.641544941320573,
+      "freq_radial": 14.816253797790711,
+      "color_manifold": 5.719716179827413,
+      "hf_noise": 3.5670105392717573,
+      "jpeg_quant": -17.989353872882212,
+      "texture_geometry": 5.681201819174296
+    },
+    "ADM": {
+      "bitplane_lsb": 4.249750281982917,
+      "freq_radial": 8.22949132617357,
+      "color_manifold": 6.386003606893089,
+      "hf_noise": 3.166700264211412,
+      "jpeg_quant": -10.927286215882441,
+      "texture_geometry": 5.195210335167656
+    },
+    "Midjourney": {
+      "bitplane_lsb": 3.850767594372283,
+      "freq_radial": 7.924616451965534,
+      "color_manifold": 6.847790942387165,
+      "hf_noise": 3.3494227003974397,
+      "jpeg_quant": -10.499620150297075,
+      "texture_geometry": 4.591996880105024
+    }
+  },
+  "ablation": {
+    "bitplane_lsb": {
+      "mean_acc": 0.999,
+      "delta": -0.0010000000000000009
+    },
+    "freq_radial": {
+      "mean_acc": 0.99875,
+      "delta": -0.0012499999999999734
+    },
+    "color_manifold": {
+      "mean_acc": 0.9995,
+      "delta": -0.0004999999999999449
+    },
+    "hf_noise": {
+      "mean_acc": 0.99925,
+      "delta": -0.0007500000000000284
+    },
+    "jpeg_quant": {
+      "mean_acc": 0.99625,
+      "delta": -0.003750000000000031
+    },
+    "texture_geometry": {
+      "mean_acc": 0.99925,
+      "delta": -0.0007500000000000284
+    }
+  },
+  "migration_detected": false,
+  "jpeg_quant_zero_delta_pp": -0.4
+}

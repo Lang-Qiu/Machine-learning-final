@@ -1,0 +1,40 @@
+{
+  "ckpt": "E:\\LQiu\\lab_folder\\Machine_learning\\AGID_Project\\Logs\\cbnet_multigen_main_25k_s42\\ckpt_epoch20.pth",
+  "n_held": 1000,
+  "results": {
+    "SD-1.4_val": {
+      "name": "SD-1.4_val",
+      "n": 12000,
+      "acc": 0.99875,
+      "auc": 0.9998380833333332,
+      "real_acc": 0.998,
+      "fake_acc": 0.9995
+    },
+    "BigGAN_heldout": {
+      "name": "BigGAN_heldout",
+      "n": 2000,
+      "acc": 0.999,
+      "auc": 1.0,
+      "real_acc": 0.998,
+      "fake_acc": 1.0
+    },
+    "ADM_heldout": {
+      "name": "ADM_heldout",
+      "n": 2000,
+      "acc": 0.9995,
+      "auc": 0.999702,
+      "real_acc": 0.999,
+      "fake_acc": 1.0
+    },
+    "MJ_heldout": {
+      "name": "MJ_heldout",
+      "n": 2000,
+      "acc": 0.9985,
+      "auc": 0.9999709999999999,
+      "real_acc": 0.999,
+      "fake_acc": 0.998
+    }
+  },
+  "mean_acc": 0.9989375,
+  "mean_auc": 0.9998777708333333
+}

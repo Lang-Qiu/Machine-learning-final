@@ -1,0 +1,12 @@
+% Per-generator real/fake accuracy (data: B_confound_table.csv baseline cols; cbnet_multigen_forensynths.json).
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{figs/fig_pergen.pdf}
+  \caption{\textbf{Per-generator real- and fake-accuracy.} \textbf{(a)} On GenImage the
+    detector is well balanced---real- and fake-accuracy are both $\approx$99--100\% on all
+    seven generators. \textbf{(b)} On cross-architecture ForenSynths, fake-accuracy stays
+    near 100\% while real-accuracy collapses (BigGAN 22.2\%, GauGAN 9.7\%): the model labels
+    most images ``AI'', the signature of a detector leaning on a GenImage-specific cue that
+    ForenSynths' real images do not share (\S{}4.2, \S{}4.3c).}
+  \label{fig:pergen}
+\end{figure}

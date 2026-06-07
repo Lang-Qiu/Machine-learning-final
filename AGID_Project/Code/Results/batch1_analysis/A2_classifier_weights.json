@@ -1,0 +1,48 @@
+{
+  "bias": -5.061417102813721,
+  "weights": [
+    {
+      "rank": 1,
+      "concept": "jpeg_quant",
+      "weight": -13.52640151977539,
+      "abs_weight": 13.52640151977539,
+      "sign": "-"
+    },
+    {
+      "rank": 2,
+      "concept": "freq_radial",
+      "weight": 9.83751392364502,
+      "abs_weight": 9.83751392364502,
+      "sign": "+"
+    },
+    {
+      "rank": 3,
+      "concept": "texture_geometry",
+      "weight": 7.346343040466309,
+      "abs_weight": 7.346343040466309,
+      "sign": "+"
+    },
+    {
+      "rank": 4,
+      "concept": "bitplane_lsb",
+      "weight": 6.44739294052124,
+      "abs_weight": 6.44739294052124,
+      "sign": "+"
+    },
+    {
+      "rank": 5,
+      "concept": "color_manifold",
+      "weight": 6.210283279418945,
+      "abs_weight": 6.210283279418945,
+      "sign": "+"
+    },
+    {
+      "rank": 6,
+      "concept": "hf_noise",
+      "weight": 3.7333004474639893,
+      "abs_weight": 3.7333004474639893,
+      "sign": "+"
+    }
+  ],
+  "interpretation": "concepts ranked by |w|; sign + \u2192 activation raises P(fake), sign - \u2192 raises P(real)."
+}

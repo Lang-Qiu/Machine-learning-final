@@ -1,0 +1,21 @@
+% Table 4 --- single- vs multi-generator on a common cross-architecture benchmark (ForenSynths).
+% Numbers: cbnet_forensynths.json (52.21), cbnet_multigen_forensynths.json (73.65), npr_forensynths.json (79.58).
+\begin{table}[t]
+  \centering
+  \caption{Single- versus multi-generator training, evaluated identically on ForenSynths (cross-architecture).
+  Multi-generator training (P4) buys genuine partial cross-architecture generalization over a single-generator
+  model (P1); NPR (P3, ProGAN-trained and thus domain-matched to ForenSynths' GANs) is stronger still,
+  underscoring that our generalization is partial, not best-in-class. The contrast is directional, not a clean
+  one-factor ablation (the models differ in training code, loss, and data scale as well as generator coverage).}
+  \label{tab:forensynths}
+  \small
+  \begin{tabular}{lccc}
+    \toprule
+    Model (ForenSynths) & Train protocol & Mean Acc (\%) & Mean AUC \\
+    \midrule
+    CBNet single-gen (SD-1.4) & P1 & 52.21 & 0.528 \\
+    CBNet Route B (4 gens)    & P4 & 73.65 & 0.820 \\
+    NPR (ProGAN)              & P3 & 79.58 & 0.894 \\
+    \bottomrule
+  \end{tabular}
+\end{table}

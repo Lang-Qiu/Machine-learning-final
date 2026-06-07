@@ -1,0 +1,37 @@
+{
+  "ckpt": "E:/LQiu/lab_folder/Machine_learning/AGID_Project/Logs/cbnet_multigen_main_25k_s42/ckpt_epoch20.pth",
+  "n_per_class": 1000,
+  "generators": [
+    "GLIDE",
+    "Wukong",
+    "VQDM"
+  ],
+  "results": {
+    "GLIDE": {
+      "name": "GLIDE",
+      "n": 2000,
+      "acc": 0.998,
+      "auc": 1.0,
+      "real_acc": 0.996,
+      "fake_acc": 1.0
+    },
+    "Wukong": {
+      "name": "Wukong",
+      "n": 2000,
+      "acc": 0.9945,
+      "auc": 0.999857,
+      "real_acc": 0.996,
+      "fake_acc": 0.993
+    },
+    "VQDM": {
+      "name": "VQDM",
+      "n": 2000,
+      "acc": 0.9975,
+      "auc": 0.999987,
+      "real_acc": 0.996,
+      "fake_acc": 0.999
+    }
+  },
+  "mean_acc": 0.9966666666666667,
+  "mean_auc": 0.999948
+}

@@ -1,0 +1,51 @@
+\documentclass{article}
+
+% NeurIPS 2022 style (course template). natbib is loaded by neurips_2022 -> \citep/\citet work.
+\usepackage[final]{neurips_2022}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{xcolor}
+\usepackage{graphicx}       % figures (\includegraphics)
+\usepackage{tikz}           % architecture schematic
+\usetikzlibrary{arrows.meta,positioning,fit,backgrounds}
+
+% pandoc emits \tightlist inside compact lists; define it (we use our own preamble, not pandoc's template).
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+\title{What Is the Accuracy Made Of? Auditing a Competitive\\ AI-Generated Image Detector with a Concept Bottleneck}
+
+% TODO (H-1): replace the bracketed placeholders with the real author name and email before submission.
+% (email wrapped in \texttt so the preceding \\ does not parse "[...]" as an optional length argument.)
+\author{%
+  [Your Name] \\
+  Shanghai Jiao Tong University \\
+  \texttt{[email@example.com]}
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\input{sections/abstract}
+\end{abstract}
+
+\input{sections/body}
+
+\medskip
+
+\bibliographystyle{plainnat}
+\bibliography{ref}
+
+\input{appendix}
+
+\end{document}
