@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2024.11.14)  7 JUN 2026 17:22
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2024.11.14)  8 JUN 2026 00:10
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -704,7 +704,7 @@ LaTeX Font Info:    ... okay on input line 34.
 * paper: letterpaper
 * layout: <same size as paper>
 * layoutoffset:(h,v)=(0.0pt,0.0pt)
-* modes: 
+* modes:
 * h-part:(L,W,R)=(92.14519pt, 430.00462pt, 92.14519pt)
 * v-part:(T,H,B)=(95.39737pt, 556.47656pt, 143.09605pt)
 * \paperwidth=614.295pt
@@ -736,7 +736,7 @@ LaTeX Font Info:    ... okay on input line 34.
 * paper: letterpaper
 * layout: <same size as paper>
 * layoutoffset:(h,v)=(0.0pt,0.0pt)
-* modes: 
+* modes:
 * h-part:(L,W,R)=(108.405pt, 397.48499pt, 108.40501pt)
 * v-part:(T,H,B)=(72.26999pt, 650.43pt, 72.27pt)
 * \paperwidth=614.295pt
@@ -811,7 +811,7 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 ))
 (D:\Programs Files\MiKTeX\tex/latex/microtype\mt-cmr.cfg
-File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman 
+File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman
 (RS)
 )
 LaTeX Font Info:    Trying to load font information for U+msa on input line 37.
@@ -856,19 +856,22 @@ LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 2
 
 (D:\Programs Files\MiKTeX\tex/latex/psnfss\ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
-) [3] [4]
+) [3]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [4]
 (fig_architecture.tex) [5] [6] (table1_baselines.tex
 Overfull \hbox (20.69063pt too wide) in paragraph at lines 16--32
- [][] 
+ [][]
  []
 
-) (table2_detection.tex) (fig_pergen.tex
-<figs/fig_pergen.pdf, id=323, 406.28595pt x 201.96666pt>
+) (table2_detection.tex) [7] (fig_pergen.tex
+<figs/fig_pergen.pdf, id=327, 406.28595pt x 201.96666pt>
 File: figs/fig_pergen.pdf Graphic file (type pdf)
 <use figs/fig_pergen.pdf>
 Package pdftex.def Info: figs/fig_pergen.pdf  used on input line 4.
 (pdftex.def)             Requested size: 397.48499pt x 197.59314pt.
-) [7]
+)
 Underfull \hbox (badness 3407) in paragraph at lines 109--110
 []\T1/ptm/b/n/10 (+20) 4.3a Chan-nel re-liance. \T1/ptm/m/n/10 (+20) The learne
 d clas-si-fier is $[] \OT1/cmr/m/n/10 = \OML/cmm/m/it/10 ^^[\OT1/cmr/m/n/10 (\O
@@ -877,48 +880,50 @@ ptm/m/n/10 (+20) with $\OT1/cmr/bx/n/10 w \OT1/cmr/m/n/10 =
  []
 
 [8] (fig_reliance.tex
-<figs/fig_channel_reliance.pdf, id=342, 403.30174pt x 227.86191pt>
+<figs/fig_channel_reliance.pdf, id=341, 403.30174pt x 227.86191pt>
 File: figs/fig_channel_reliance.pdf Graphic file (type pdf)
 <use figs/fig_channel_reliance.pdf>
 Package pdftex.def Info: figs/fig_channel_reliance.pdf  used on input line 4.
 (pdftex.def)             Requested size: 397.48499pt x 224.58609pt.
-) [9 <./figs/fig_pergen.pdf>] (table3_confound.tex)
-(fig_confound.tex
-<figs/fig_confound.pdf, id=403, 404.29921pt x 201.68474pt>
+)
+Underfull \vbox (badness 7451) has occurred while \output is active []
+
+ [9 <./figs/fig_pergen.pdf>] (table3_confound.tex) (fig_confound.tex
+<figs/fig_confound.pdf, id=401, 404.29921pt x 201.68474pt>
 File: figs/fig_confound.pdf Graphic file (type pdf)
 <use figs/fig_confound.pdf>
 Package pdftex.def Info: figs/fig_confound.pdf  used on input line 4.
 (pdftex.def)             Requested size: 397.48499pt x 198.29286pt.
-) [10 <./figs/fig_channel_reliance.pdf>] (fig_dissociation.tex
+)
+Underfull \vbox (badness 7504) has occurred while \output is active []
+
+ [10 <./figs/fig_channel_reliance.pdf>] (fig_dissociation.tex
 <figs/fig_dissociation.pdf, id=484, 310.3482pt x 209.77873pt>
 File: figs/fig_dissociation.pdf Graphic file (type pdf)
 <use figs/fig_dissociation.pdf>
 Package pdftex.def Info: figs/fig_dissociation.pdf  used on input line 4.
 (pdftex.def)             Requested size: 246.43874pt x 166.58124pt.
-) (fig_generalization.tex
-<figs/fig_generalization.pdf, id=486, 404.41516pt x 216.99644pt>
+) [11 <./figs/fig_confound.pdf>] (fig_generalization.tex
+<figs/fig_generalization.pdf, id=563, 404.41516pt x 216.99644pt>
 File: figs/fig_generalization.pdf Graphic file (type pdf)
 <use figs/fig_generalization.pdf>
 Package pdftex.def Info: figs/fig_generalization.pdf  used on input line 4.
 (pdftex.def)             Requested size: 369.65811pt x 198.34781pt.
-) (table4_forensynths.tex [11 <./figs/fig_confound.pdf>])
+) [12 <./figs/fig_dissociation.pdf> <./figs/fig_generalization.pdf>] (table4_fo
+rensynths.tex)
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [12 <./figs/fig_dissociation.pdf> <./figs/fig_generalization.pdf>] [13]
-Underfull \vbox (badness 10000) has occurred while \output is active []
+ [13]
+Underfull \vbox (badness 2460) has occurred while \output is active []
 
  [14]
-Underfull \vbox (badness 1189) has occurred while \output is active []
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [15])
-Underfull \vbox (badness 1189) has occurred while \output is active []
+ [15]
+Underfull \vbox (badness 5475) has occurred while \output is active []
 
- [16]
-(manuscript.bbl [17]) (appendix.tex
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[18]
+ [16])
+(manuscript.bbl [17] [18]) (appendix.tex
 Underfull \hbox (badness 7344) in paragraph at lines 58--58
 []\T1/ptm/m/n/10 (+20) Table 6: []Learned linear-head weights $\OT1/cmr/bx/n/10
  w$ \T1/ptm/m/n/10 (+20) and bias $\OML/cmm/m/it/10 b$ \T1/ptm/m/n/10 (+20) per
@@ -938,6 +943,9 @@ Underfull \hbox (badness 10000) in paragraph at lines 58--58
  []
 
 
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
 Underfull \hbox (badness 4205) in paragraph at lines 101--101
 []\T1/ptm/m/n/10 (+20) Table 8: []Per-generator single-channel zero-out $\OT1/c
 mr/m/n/10 ^^A$\T1/ptm/m/n/10 (+20) acc (pp), seed-42 model. Source:
@@ -946,16 +954,16 @@ mr/m/n/10 ^^A$\T1/ptm/m/n/10 (+20) acc (pp), seed-42 model. Source:
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-
+[19]
 Underfull \hbox (badness 10000) in paragraph at lines 159--159
 []\T1/ptm/m/n/10 (+20) Table 10: []Per-generator cal-i-bra-tion (2000 im-ages/g
 enerator). Source:
  []
 
-[19]
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
 Underfull \hbox (badness 10000) in paragraph at lines 182--182
 []\T1/ptm/m/n/10 (+20) Table 11: []ForenSynths per-generator met-rics, Route B.
  Source:
@@ -976,26 +984,32 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[20]
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-) [21] [22] (manuscript.aux)
+
+Underfull \vbox (badness 1490) has occurred while \output is active []
+
+ [20]
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+) [21] [22] [23] (manuscript.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-04>
  ***********
 Package rerunfilecheck Info: File `manuscript.out' has not changed.
 (rerunfilecheck)             Checksum: 40742F558CAC59EEA2DA5CA54952EA64;4587.
- ) 
+ )
 Here is how much of TeX's memory you used:
- 24948 strings out of 474486
- 456043 string characters out of 5753103
- 1957542 words of memory out of 5000000
- 46246 multiletter control sequences out of 15000+600000
- 630889 words of font info for 356 fonts, out of 8000000 for 9000
+ 24960 strings out of 474486
+ 456161 string characters out of 5753103
+ 1961542 words of memory out of 5000000
+ 46247 multiletter control sequences out of 15000+600000
+ 631466 words of font info for 362 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 84i,13n,87p,2281b,1065s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 84i,13n,87p,2864b,1065s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\LQiu\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ectt0
 900.pk> <C:\Users\LQiu\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\
 ectt1000.pk><D:/Programs Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb
@@ -1016,9 +1030,9 @@ KTeX/fonts/type1/public/amsfonts/cm/cmsy9.pfb><D:/Programs Files/MiKTeX/fonts/t
 ype1/public/amsfonts/symbols/msbm10.pfb><D:/Programs Files/MiKTeX/fonts/type1/u
 rw/times/utmb8a.pfb><D:/Programs Files/MiKTeX/fonts/type1/urw/times/utmr8a.pfb>
 <D:/Programs Files/MiKTeX/fonts/type1/urw/times/utmri8a.pfb>
-Output written on manuscript.pdf (22 pages, 549516 bytes).
+Output written on manuscript.pdf (23 pages, 552548 bytes).
 PDF statistics:
- 930 PDF objects out of 1000 (max. 8388607)
- 103 named destinations out of 1000 (max. 500000)
+ 936 PDF objects out of 1000 (max. 8388607)
+ 105 named destinations out of 1000 (max. 500000)
  69878 words of extra memory for PDF output out of 74296 (max. 10000000)
 

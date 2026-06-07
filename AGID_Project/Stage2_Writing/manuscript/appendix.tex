@@ -223,7 +223,28 @@ debiasing, the \texttt{jpeg-quant} weight shrinks $1.49\times$ yet its zero-out 
 $-48.18$\,pp (rank-1 by ablation), while \texttt{freq-radial} becomes inert; the Cohen's
 $d$ for \texttt{jpeg-quant} remains large and negative on every generator. The
 double-dissociation detail (Table~\ref{tab:dissoc}) shows each model winning on the
-container statistics it was trained under.
+container statistics it was trained under. Table~\ref{tab:edelta-multiseed} reports the
+three-seed replication of the debiased-model audit (seed-2 to epoch 6, where training was
+interrupted): a compression-pair channel is the rank-1 single-channel zero-out in every seed,
+but the magnitude is seed-dependent and the seed-42 figure ($-48.2$\,pp) is the strong end.
+
+\begin{table}[h]
+  \centering
+  \caption{Multi-seed Outcome C: single-channel zero-out (pp) on the Q96-debiased model across
+    three seeds. A compression-pair channel (bold) is the rank-1 zero-out in every seed.
+    Source: \texttt{edelta\_seed\{1,2\}\_audit/gate3\_full\_audit.json}.}
+  \label{tab:edelta-multiseed}
+  \small
+  \begin{tabular}{lrrrrl}
+    \toprule
+    Seed (epochs) & $w_{\text{jpeg}}$ & $w_{\text{freq}}$ & jpeg-q.\ zero-out & freq-rad.\ zero-out & rank-1 channel \\
+    \midrule
+    42 (10) & $-9.11$ & $+6.37$ & $\mathbf{-48.18}$ & $-0.90$           & jpeg-quant \\
+    1 (10)  & $-6.74$ & $+7.34$ & $-8.10$           & $\mathbf{-14.15}$ & freq-radial \\
+    2 (6)   & $-6.36$ & $+6.00$ & $\mathbf{-7.70}$  & $-1.62$           & jpeg-quant \\
+    \bottomrule
+  \end{tabular}
+\end{table}
 
 \begin{table}[h]
   \centering
