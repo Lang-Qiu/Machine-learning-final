@@ -1,0 +1,111 @@
+{
+  "config": {
+    "root": "E:\\LQiu\\lab_folder\\Machine_learning\\AGID_Project\\Data\\GenImage",
+    "generators": [
+      "Stable_Diffusion_v1.4",
+      "BigGAN",
+      "ADM",
+      "Midjourney"
+    ],
+    "split": "train_25k",
+    "use_shared_concept_labels": true,
+    "val_generators": "Stable_Diffusion_v1.4",
+    "max_train_samples": 2000,
+    "max_val_samples": 500,
+    "n_concepts": 6,
+    "pretrained": true,
+    "signal_channels": 512,
+    "epochs": 5,
+    "batch_size": 32,
+    "accum_steps": 2,
+    "lr_backbone": 0.0001,
+    "lr_head": 0.0005,
+    "lr_classifier": 0.001,
+    "weight_decay": 0.0001,
+    "lambda_concept": 0.5,
+    "lambda_pair": 0.2,
+    "lambda_sparsity": 0.0,
+    "amp": true,
+    "image_size": 256,
+    "num_workers": 2,
+    "disable_destructive_aug": true,
+    "out_dir": "Logs/protocol_d_mini_no_sparsity_s42",
+    "ckpt_every": 5,
+    "eval_every": 5,
+    "seed": 42
+  },
+  "final_eval": {
+    "Stable_Diffusion_v1.4": {
+      "name": "Stable_Diffusion_v1.4",
+      "n": 1000,
+      "acc": 0.982,
+      "auc": 0.9993479999999999,
+      "real_acc": 0.98,
+      "fake_acc": 0.984
+    }
+  },
+  "history": [
+    {
+      "epoch": 1,
+      "time_sec": 110.19401788711548,
+      "total": 0.6001739503145218,
+      "task": 0.5487911089658737,
+      "concept": 0.09284771675616503,
+      "content_pair": 0.02479736328125,
+      "sparsity": -1.3900875644683839,
+      "lr": 0.0001
+    },
+    {
+      "epoch": 2,
+      "time_sec": 111.53972291946411,
+      "total": 0.42220024222135544,
+      "task": 0.3365009639561176,
+      "concept": 0.1633887864500284,
+      "content_pair": 0.020019287109375,
+      "sparsity": -1.0553145003318787,
+      "lr": 9.045084971874738e-05
+    },
+    {
+      "epoch": 3,
+      "time_sec": 126.98198103904724,
+      "total": 0.3272215923666954,
+      "task": 0.2358429839015007,
+      "concept": 0.17574952392280102,
+      "content_pair": 0.0175146484375,
+      "sparsity": -0.965329149723053,
+      "lr": 6.545084971874737e-05
+    },
+    {
+      "epoch": 4,
+      "time_sec": 124.15580630302429,
+      "total": 0.27793950083851815,
+      "task": 0.18524486076831817,
+      "concept": 0.17972533850371838,
+      "content_pair": 0.014156982421875,
+      "sparsity": -0.9125436763763428,
+      "lr": 3.454915028125263e-05
+    },
+    {
+      "epoch": 5,
+      "time_sec": 137.63289213180542,
+      "total": 0.25761054062843325,
+      "task": 0.16333280003070832,
+      "concept": 0.182386777728796,
+      "content_pair": 0.01542578125,
+      "sparsity": -0.8862568200826645,
+      "lr": 9.549150281252631e-06,
+      "mean_acc": 0.982,
+      "mean_auc": 0.9993479999999999,
+      "eval": [
+        {
+          "name": "Stable_Diffusion_v1.4",
+          "n": 1000,
+          "acc": 0.982,
+          "auc": 0.9993479999999999,
+          "real_acc": 0.98,
+          "fake_acc": 0.984
+        }
+      ]
+    }
+  ]
+}

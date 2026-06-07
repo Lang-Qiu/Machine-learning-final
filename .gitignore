@@ -13,6 +13,8 @@ AGID_Project/Logs/
 AGID_Project/Code/Logs/
 AGID_Project/Results/
 AGID_Project/Code/tmp_hf_cache/
+AGID_Project/Code/Results/*.stdout.log
+AGID_Project/Code/Results/*.stderr.log
 *.pth
 *.pt
 *.ckpt

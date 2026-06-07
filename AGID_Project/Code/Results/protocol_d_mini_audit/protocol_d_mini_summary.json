@@ -1,0 +1,59 @@
+{
+  "n_rows": 18,
+  "generator": "Stable_Diffusion_v1.4",
+  "n_per_class": 500,
+  "claim_scope": "mini_training_design_sensitivity_not_full_retraining",
+  "summary": {
+    "full": {
+      "baseline_acc": 0.987,
+      "baseline_auc": 0.999356,
+      "top_channel": "jpeg_quant",
+      "top_drop_pp": 2.2,
+      "compression_drop_pp": 2.4,
+      "total_positive_drop_pp": 3.4,
+      "compression_share": 0.705882,
+      "channels": {
+        "bitplane_lsb": 0.2,
+        "color_manifold": 0.4,
+        "freq_radial": 0.2,
+        "hf_noise": 0.2,
+        "jpeg_quant": 2.2,
+        "texture_geometry": 0.2
+      }
+    },
+    "no_pair": {
+      "baseline_acc": 0.985,
+      "baseline_auc": 0.999264,
+      "top_channel": "color_manifold",
+      "top_drop_pp": 0.5,
+      "compression_drop_pp": 0.4,
+      "total_positive_drop_pp": 1.6,
+      "compression_share": 0.25,
+      "channels": {
+        "bitplane_lsb": 0.2,
+        "color_manifold": 0.5,
+        "freq_radial": 0.0,
+        "hf_noise": 0.3,
+        "jpeg_quant": 0.4,
+        "texture_geometry": 0.2
+      }
+    },
+    "no_sparsity": {
+      "baseline_acc": 0.982,
+      "baseline_auc": 0.999348,
+      "top_channel": "jpeg_quant",
+      "top_drop_pp": 0.2,
+      "compression_drop_pp": 0.2,
+      "total_positive_drop_pp": 0.2,
+      "compression_share": 1.0,
+      "channels": {
+        "bitplane_lsb": 0.0,
+        "color_manifold": 0.0,
+        "freq_radial": 0.0,
+        "hf_noise": 0.0,
+        "jpeg_quant": 0.2,
+        "texture_geometry": 0.0
+      }
+    }
+  }
+}

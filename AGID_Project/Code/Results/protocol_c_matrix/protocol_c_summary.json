@@ -1,0 +1,16 @@
+{
+  "n_rows": 2812,
+  "families": {
+    "drop": 984,
+    "keep_only": 984,
+    "impute_single": 432,
+    "counterfactual_swap": 252,
+    "jpeg_quality_sweep": 35,
+    "resolution_sweep": 35,
+    "edelta_single_drop": 90
+  },
+  "single_drop_rows": 18,
+  "compression_share_single_drop": 0.919498,
+  "reliance_concentration_single_drop": 0.25254,
+  "claim_scope": "Frozen-model causal/interventional audit matrix; not a full retraining matrix."
+}

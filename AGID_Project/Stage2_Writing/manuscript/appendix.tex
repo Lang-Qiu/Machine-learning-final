@@ -118,6 +118,62 @@ four channels are inert ($|\Delta|<6$\,pp, mostly $<1$\,pp).
   \end{tabular}
 \end{table}
 
+\section{Expanded Frozen Matrix and Mini Loss-Term Check}
+\label{app:protocol-cd}
+
+Protocol C expands the intervention evidence without changing the training budget. It enumerates
+closed-form interventions on frozen bottleneck dumps and merges the existing perturbation audits;
+it is therefore a \emph{causal audit matrix}, not a full retraining matrix. The single-drop rows
+used for the reliance summary assign 91.95\% of the positive drop to the compression pair
+\{\texttt{jpeg-quant}, \texttt{freq-radial}\}. Source files are
+\texttt{protocol\_c\_frozen\_audit\_matrix.csv} and \texttt{protocol\_c\_summary.json}.
+
+\begin{table}[h]
+  \centering
+  \caption{Protocol C frozen intervention matrix, by row family. Source:
+    \texttt{Results/protocol\_c\_matrix/protocol\_c\_summary.json}.}
+  \label{tab:protocol-c-matrix}
+  \small
+  \begin{tabular}{lr}
+    \toprule
+    Family & Rows \\
+    \midrule
+    drop & $984$ \\
+    keep-only & $984$ \\
+    single-channel imputation & $432$ \\
+    counterfactual swap & $252$ \\
+    E-Delta single-drop & $90$ \\
+    JPEG-quality sweep & $35$ \\
+    resolution sweep & $35$ \\
+    \midrule
+    total & $2812$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Protocol D is a small-scale training sanity check: three 5-epoch variants trained on
+2000 images/class/generator with the same seed and SD-1.4 mini-val evaluation. It is useful as a
+feasibility check, but the zero-out effects are too small and unstable to support a full-scale
+claim about the auxiliary losses.
+
+\begin{table}[h]
+  \centering
+  \caption{Protocol D mini-training design sensitivity. Source:
+    \texttt{Results/protocol\_d\_mini\_audit/protocol\_d\_mini\_summary.json}.}
+  \label{tab:protocol-d-mini}
+  \small
+  \begin{tabular}{lrrrrrr}
+    \toprule
+    Variant & $\lambda_{\text{pair}}$ & $\lambda_{\text{sparse}}$ & Acc. & AUC
+      & Top zero-out & Compression share \\
+    \midrule
+    full        & $0.2$ & $0.05$ & $98.70$ & $0.999356$ & jpeg-q.\ ($2.20$\,pp) & $0.706$ \\
+    no-pair     & $0.0$ & $0.05$ & $98.50$ & $0.999264$ & color ($0.50$\,pp)   & $0.250$ \\
+    no-sparsity & $0.2$ & $0.00$ & $98.20$ & $0.999348$ & jpeg-q.\ ($0.20$\,pp) & $1.000$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
 \section{Concept Correlation Matrix}
 \label{app:corr}
 
