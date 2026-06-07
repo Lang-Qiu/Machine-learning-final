@@ -1,6 +1,7 @@
 # Local agent/runtime state
 .claude/
 .codex/
+.worktrees/
 __pycache__/
 *.py[cod]
 .pytest_cache/
